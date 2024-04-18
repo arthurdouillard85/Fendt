@@ -1,0 +1,35 @@
+.lmt-cart {
+  color: white;
+  background-color: green;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 300px;
+}
+
+.lmt-cart-add-button {
+  margin-left: 32px;
+  cursor: pointer;
+}
+
+.lmt-cart-toggle-button {
+  background: none;
+  outline: none;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: self-start;
+  padding: 0;
+  color: white;
+  align-self: flex-end;
+}
+
+.lmt-cart-closed {
+  padding: 32px;
+  width: 300px;
+}
+
+.lmt-cart-closed > button {
+  color: black;
+}
