@@ -191,9 +191,10 @@ app.post("/login", (req, res, next) => {
                   res.status(200).json({
                     message: "Authentification réussie.",
                     userId: userId,
+                    token: token,
                   });
                 } else {
-                  res.status(401).json({ error: "Identifiants incorrects." });
+                  res.status(401).json({ error: "Identifiants i<<ncorrects." });
                 }
               }
             }
