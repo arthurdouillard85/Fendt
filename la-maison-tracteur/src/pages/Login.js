@@ -185,7 +185,7 @@ function Login() {
             <div className="mdp">
               <input
                 type="password"
-                id="password"
+                id="SignupPassword"
                 name="password"
                 className="form-control"
                 value={password}
