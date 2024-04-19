@@ -244,7 +244,7 @@ app.post("/login", (req, res, next) => {
                     token: token,
                   });
                 } else {
-                  res.status(401).json({ error: "Identifiants i<<ncorrects." });
+                  res.status(401).json({ error: "Identifiants incorrects." });
                 }
               }
             }
@@ -256,4 +256,77 @@ app.post("/login", (req, res, next) => {
     }
   );
 });
+
+app.get('/profile/:userId', (req, res) => {
+  try {
+    // Récupérer l'ID de l'utilisateur depuis les paramètres de requête
+    const userId = req.params.userId;
+
+    // Requête pour récupérer l'email de l'utilisateur depuis la base de données
+    const selectQuery = 'SELECT email FROM utilisateur WHERE id = ?';
+    connection.query(selectQuery, [userId], (error, results) => {
+      if (error) {
+        console.error("Une erreur s'est produite lors de la récupération de l'email de l'utilisateur :", error);
+        return res.status(500).json({ message: "Une erreur s'est produite lors de la récupération de l'email de l'utilisateur." });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ message: "L'utilisateur n'existe pas." });
+      }
+
+      // Récupérer l'email de l'utilisateur à partir des résultats de la requête
+      const userEmail = results[0].email;
+
+      // Renvoyer l'email de l'utilisateur en tant que réponse
+      res.json({ email: userEmail });
+    });
+  } catch (error) {
+    // Gérer les erreurs et renvoyer un message d'erreur approprié
+    console.error("Une erreur s'est produite lors de la récupération de l'email de l'utilisateur :", error);
+    res.status(500).json({ message: "Une erreur s'est produite lors de la récupération de l'email de l'utilisateur." });
+  }
+});
+
+
+app.post('/change-password', async (req, res) => {
+  // Récupérer les données du corps de la requête
+  const { userId, oldPassword, newPassword } = req.body;
+
+  try {
+    // Requête pour récupérer le mot de passe haché de l'utilisateur
+    const selectQuery = 'SELECT password FROM utilisateur WHERE id = ?';
+    connection.query(selectQuery, [userId], async (error, results) => {
+      if (error) {
+        throw error;
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ message: "L'utilisateur n'existe pas." });
+      }
+
+      // Vérifier si l'ancien mot de passe correspond au mot de passe stocké dans la base de données
+      const hashedPasswordFromDatabase = results[0].password;
+      const passwordMatch = await bcrypt.compare(oldPassword, hashedPasswordFromDatabase);
+      if (!passwordMatch) {
+        return res.status(400).json({ message: "L'ancien mot de passe est incorrect." });
+      }
+
+      // Hasher le nouveau mot de passe
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+      // Requête pour mettre à jour le mot de passe dans la base de données
+      const updateQuery = 'UPDATE utilisateur SET password = ? WHERE id = ?';
+      connection.query(updateQuery, [hashedNewPassword, userId], (updateError, updateResults) => {
+        if (updateError) {
+          throw updateError;
+        }
+        console.log('Mot de passe changé avec succès.');
+        res.json({ message: "Mot de passe changé avec succès." });
+      });
+    });
+  } catch (error) {
+    // Gérer les erreurs
+    console.error("Une erreur s'est produite lors du changement de mot de passe :", error);
+    res.status(500).json({ message: "Une erreur s'est produite lors du changement de mot de passe." });
+  }
+});
+
 module.exports = app;
