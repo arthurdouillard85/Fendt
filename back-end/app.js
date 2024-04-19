@@ -1,10 +1,23 @@
 const express = require("express");
+const multer = require("multer");
 const cors = require("cors");
 const mysql = require("mysql2");
 const app = express();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    const uploadDir = "./images";
+    callback(null, uploadDir);
+  },
+  filename: (req, file, callback) => {
+    const fileName = `${Date.now()}-${file.originalname}`;
+    callback(null, fileName);
+  },
+});
+const upload = multer({ storage: storage });
+
 app.use("/images", express.static("images"));
 
 app.use(bodyParser.json());
@@ -103,6 +116,43 @@ app.put("/:id", (req, res, next) => {
       }
     }
   );
+});
+
+// Route pour gérer le téléchargement d'images
+app.post("/upload", upload.single("image"), async (req, res) => {
+  try {
+    // req.file contient les informations sur le fichier téléchargé
+    if (req.file) {
+      // Si true, le fichier a été téléchargé avec succès
+      const imageUrl = `http://localhost:3001/images/${req.file.filename}`;
+      // Mise à jour du champ 'cover' dans MySQL avec la nouvelle URL de l'image
+      const tracteurId = req.body.tracteurId; // Assurez-vous d'envoyer l'ID du vêtement avec la requête POST (côté Front)
+      const updateQuery = "UPDATE tracteur SET cover = ? WHERE id = ?";
+      connection.query(
+        updateQuery,
+        [imageUrl, tracteurId],
+        (error, results) => {
+          if (error) {
+            console.error(
+              "Erreur mise à jour du champ cover dans MySQL :",
+              error
+            );
+            res
+              .status(500)
+              .json({ error: "Erreur serveur lors mise à jour image." });
+          } else {
+            // Après la MAJ image, on peut renvoyer l'URL de l'image comme réponse si besoin
+            res.status(200).json({ imageUrl: imageUrl });
+          }
+        }
+      );
+    } else {
+      res.status(400).json({ error: "Aucun fichier téléchargé." });
+    }
+  } catch (error) {
+    console.error("Erreur mise à jour du champ cover dans MySQL :", error);
+    res.status(500).json({ error: "Erreur serveur lors mise à jour image." });
+  }
 });
 
 // bcrypt : Ajouter un nouvel utilisateur

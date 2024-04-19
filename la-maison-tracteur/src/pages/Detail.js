@@ -5,6 +5,10 @@ function Detail() {
   const { idArticle } = useParams();
   const [detailTracteur, setData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [image, setImage] = useState(null);
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
   const [updatedTracteur, setUpdatedTracteur] = useState({
     name: "",
     cover: "",
@@ -12,6 +16,25 @@ function Detail() {
     confort: 0,
     taille: "",
   });
+  const handleImageUpload = () => {
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("tracteurId", idArticle);
+    fetch("http://localhost:3001/upload", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const imageUrl = data.imageUrl;
+        // Mettre à jour l'URL de l'image dans le state
+        setUpdatedTracteur({ ...updatedTracteur, cover: imageUrl });
+        setIsEditing(false);
+      })
+      .catch((error) => {
+        console.error("Erreur téléchargement image :", error);
+      });
+  };
 
   useEffect(() => {
     fetch(`http://localhost:3001/${idArticle}`)
@@ -67,6 +90,23 @@ function Detail() {
           <h2>Chevaux : {detailTracteur.chevaux}</h2>
           <h2>Category : {detailTracteur.category}</h2>
           <button onClick={() => setIsEditing(true)}>Modifier</button>
+          <label>Nom:</label>
+          <input
+            type="text"
+            name="name"
+            value={updatedTracteur.name}
+            onChange={handleInputChange}
+          />
+          <input type="file" onChange={handleImageChange} />
+          <button
+            onClick={() => {
+              handleUpdateTracteur();
+              handleImageUpload();
+            }}
+          >
+            Enregistrer
+          </button>
+          <button onClick={() => setIsEditing(false)}>Annuler</button>
         </div>
       ) : (
         <div>
