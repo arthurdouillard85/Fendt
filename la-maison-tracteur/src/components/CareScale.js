@@ -14,10 +14,11 @@ const quantityLabel = {
   8: "beaucoup",
   9: "beaucoup",
   10: "beaucoup",
+  11: "beaucoup",
 };
 
 function CareScale({ scaleValue, careType }) {
-  const range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11];
   const scaleType =
     careType === "chevaux" ? (
       <img src={Chevaux} alt="cheval-icon" />
