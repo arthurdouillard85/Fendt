@@ -111,7 +111,6 @@ function Login() {
               <i className="bx bxl-apple"></i> Use Apple
             </button>
           </div>
-
           <div className="separator">
             <div className="line"></div>
             <p>Or</p>
