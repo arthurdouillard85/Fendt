@@ -11,6 +11,7 @@ function Detail() {
   const [isEditing, setIsEditing] = useState(false);
   const [image, setImage] = useState(null);
   const [userId, setUserId] = useState("");
+  const [role, setRole] = useState("");
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
@@ -42,6 +43,26 @@ function Detail() {
   };
 
   useEffect(() => {
+    const userIdFromLocalStorage = localStorage.getItem("userId");
+    setUserId(userIdFromLocalStorage);
+
+    // Requête pour récupérer le role de l'utilisateur à partir de l'ID de l'utilisateur
+    fetch(`http://localhost:3001/profile/${userIdFromLocalStorage}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.role) {
+          setRole(data.role);
+        } else {
+          console.error("Impossible de récupérer le role de l'utilisateur.");
+        }
+      })
+      .catch((error) =>
+        console.error(
+          "Une erreur s'est produite lors de la récupération de l'email de l'utilisateur :",
+          error,
+        ),
+      );
+
     fetch(`http://localhost:3001/${idArticle}`)
       .then((response) => response.json())
       .then((detailTracteur) => {
@@ -107,7 +128,7 @@ function Detail() {
           <h2 className="tracteur-category">
             Category : {detailTracteur.category}
           </h2>
-          {userId === "7" && (
+          {role === "gestionnaire" && (
             <button className="edit-button" onClick={() => setIsEditing(true)}>
               Modifier
             </button>

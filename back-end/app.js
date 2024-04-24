@@ -72,7 +72,7 @@ app.get("/:id", (req, res, next) => {
           res.status(404).json({ error: "Aucun tracteur trouvé avec cet ID." });
         }
       }
-    }
+    },
   );
 });
 
@@ -99,7 +99,7 @@ app.put("/:id", (req, res, next) => {
             if (selectError) {
               console.error(
                 "Erreur lors récupération données mises à jour :",
-                selectError
+                selectError,
               );
               res.status(500).json({
                 error: "Erreur serveur récupération données mises à jour.",
@@ -111,10 +111,10 @@ app.put("/:id", (req, res, next) => {
                 res.status(404).json({ error: "L'objet n'existe pas." });
               }
             }
-          }
+          },
         );
       }
-    }
+    },
   );
 });
 
@@ -135,7 +135,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
           if (error) {
             console.error(
               "Erreur mise à jour du champ cover dans MySQL :",
-              error
+              error,
             );
             res
               .status(500)
@@ -144,7 +144,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
             // Après la MAJ image, on peut renvoyer l'URL de l'image comme réponse si besoin
             res.status(200).json({ imageUrl: imageUrl });
           }
-        }
+        },
       );
     } else {
       res.status(400).json({ error: "Aucun fichier téléchargé." });
@@ -175,7 +175,7 @@ app.post("/signup", (req, res, next) => {
             if (error) {
               console.error(
                 "Erreur insertion utilisateur dans la base de données :",
-                error
+                error,
               );
               res
                 .status(500)
@@ -187,7 +187,7 @@ app.post("/signup", (req, res, next) => {
                 userId: userId,
               });
             }
-          }
+          },
         );
       }
     });
@@ -208,7 +208,7 @@ app.post("/login", (req, res, next) => {
       if (error) {
         console.error(
           "Erreur lors recherche utilisateur dans base de données :",
-          error
+          error,
         );
         res
           .status(500)
@@ -224,7 +224,7 @@ app.post("/login", (req, res, next) => {
               if (compareError) {
                 console.error(
                   "Erreur lors comparaison des mots de passe :",
-                  compareError
+                  compareError,
                 );
                 res
                   .status(500)
@@ -247,27 +247,34 @@ app.post("/login", (req, res, next) => {
                   res.status(401).json({ error: "Identifiants incorrects." });
                 }
               }
-            }
+            },
           );
         } else {
           res.status(401).json({ error: "Identifiants incorrects." });
         }
       }
-    }
+    },
   );
 });
 
-app.get('/profile/:userId', (req, res) => {
+// Fonction de route pour récupérer le profil de l'utilisateur
+const getUserProfile = (req, res) => {
   try {
     // Récupérer l'ID de l'utilisateur depuis les paramètres de requête
     const userId = req.params.userId;
 
     // Requête pour récupérer l'email de l'utilisateur depuis la base de données
-    const selectQuery = 'SELECT email FROM utilisateur WHERE id = ?';
+    const selectQuery = "SELECT email,role FROM utilisateur WHERE id = ?";
     connection.query(selectQuery, [userId], (error, results) => {
       if (error) {
-        console.error("Une erreur s'est produite lors de la récupération de l'email de l'utilisateur :", error);
-        return res.status(500).json({ message: "Une erreur s'est produite lors de la récupération de l'email de l'utilisateur." });
+        console.error(
+          "Une erreur s'est produite lors de la récupération de l'email de l'utilisateur :",
+          error,
+        );
+        return res.status(500).json({
+          message:
+            "Une erreur s'est produite lors de la récupération de l'email de l'utilisateur.",
+        });
       }
       if (results.length === 0) {
         return res.status(404).json({ message: "L'utilisateur n'existe pas." });
@@ -275,25 +282,37 @@ app.get('/profile/:userId', (req, res) => {
 
       // Récupérer l'email de l'utilisateur à partir des résultats de la requête
       const userEmail = results[0].email;
+      const userRole = results[0].role;
 
       // Renvoyer l'email de l'utilisateur en tant que réponse
-      res.json({ email: userEmail });
+      res.json({ email: userEmail, role: userRole });
     });
   } catch (error) {
     // Gérer les erreurs et renvoyer un message d'erreur approprié
-    console.error("Une erreur s'est produite lors de la récupération de l'email de l'utilisateur :", error);
-    res.status(500).json({ message: "Une erreur s'est produite lors de la récupération de l'email de l'utilisateur." });
+    console.error(
+      "Une erreur s'est produite lors de la récupération de l'email de l'utilisateur :",
+      error,
+    );
+    res.status(500).json({
+      message:
+        "Une erreur s'est produite lors de la récupération de l'email de l'utilisateur.",
+    });
   }
-});
+};
 
+// Définir la route pour /profile/:userId
+app.get("/profile/:userId", getUserProfile);
 
-app.post('/change-password', async (req, res) => {
+// Définir la route pour /detail/:userId
+app.get("/detail/:userId", getUserProfile);
+
+app.post("/change-password", async (req, res) => {
   // Récupérer les données du corps de la requête
   const { userId, oldPassword, newPassword } = req.body;
 
   try {
     // Requête pour récupérer le mot de passe haché de l'utilisateur
-    const selectQuery = 'SELECT password FROM utilisateur WHERE id = ?';
+    const selectQuery = "SELECT password FROM utilisateur WHERE id = ?";
     connection.query(selectQuery, [userId], async (error, results) => {
       if (error) {
         throw error;
@@ -304,28 +323,42 @@ app.post('/change-password', async (req, res) => {
 
       // Vérifier si l'ancien mot de passe correspond au mot de passe stocké dans la base de données
       const hashedPasswordFromDatabase = results[0].password;
-      const passwordMatch = await bcrypt.compare(oldPassword, hashedPasswordFromDatabase);
+      const passwordMatch = await bcrypt.compare(
+        oldPassword,
+        hashedPasswordFromDatabase,
+      );
       if (!passwordMatch) {
-        return res.status(400).json({ message: "L'ancien mot de passe est incorrect." });
+        return res
+          .status(400)
+          .json({ message: "L'ancien mot de passe est incorrect." });
       }
 
       // Hasher le nouveau mot de passe
       const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
       // Requête pour mettre à jour le mot de passe dans la base de données
-      const updateQuery = 'UPDATE utilisateur SET password = ? WHERE id = ?';
-      connection.query(updateQuery, [hashedNewPassword, userId], (updateError, updateResults) => {
-        if (updateError) {
-          throw updateError;
-        }
-        console.log('Mot de passe changé avec succès.');
-        res.json({ message: "Mot de passe changé avec succès." });
-      });
+      const updateQuery = "UPDATE utilisateur SET password = ? WHERE id = ?";
+      connection.query(
+        updateQuery,
+        [hashedNewPassword, userId],
+        (updateError, updateResults) => {
+          if (updateError) {
+            throw updateError;
+          }
+          console.log("Mot de passe changé avec succès.");
+          res.json({ message: "Mot de passe changé avec succès." });
+        },
+      );
     });
   } catch (error) {
     // Gérer les erreurs
-    console.error("Une erreur s'est produite lors du changement de mot de passe :", error);
-    res.status(500).json({ message: "Une erreur s'est produite lors du changement de mot de passe." });
+    console.error(
+      "Une erreur s'est produite lors du changement de mot de passe :",
+      error,
+    );
+    res.status(500).json({
+      message: "Une erreur s'est produite lors du changement de mot de passe.",
+    });
   }
 });
 
