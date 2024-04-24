@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="d916e315-96c5-4d29-9159-1bb59f3aed0b" name="la-maison-tracteur Mapping">
+      <data-sources db="b8db78fc-52bf-4b92-a6ea-0f1c6234172e" ddl="7fdbca04-c8dd-4a06-a184-963392af6507" />
+    </mapping>
+  </component>
+</project>

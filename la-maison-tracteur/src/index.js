@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import Header from "./components/Header";
 import Detail from "./pages/Detail";
 import Home from "./pages/Home";
@@ -32,5 +32,5 @@ root.render(
         <Profile />
       </Route>
     </Router>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

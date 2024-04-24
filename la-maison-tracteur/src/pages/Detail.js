@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "../styles/Detail.css";
+import Banner from "../components/Banner";
+import Header from "../components/Header";
+import logo from "../assets/logo.png";
 
 function Detail() {
   const { idArticle } = useParams();
   const [detailTracteur, setData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [image, setImage] = useState(null);
+  const [userId, setUserId] = useState("");
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
@@ -13,8 +18,8 @@ function Detail() {
     name: "",
     cover: "",
     price: 0,
-    confort: 0,
-    taille: "",
+    fuel: 0,
+    chevaux: "",
   });
   const handleImageUpload = () => {
     const formData = new FormData();
@@ -46,9 +51,16 @@ function Detail() {
       .catch((error) => {
         console.error(
           "Erreur lors de la récupération du détail tracteur:",
-          error
+          error,
         );
       });
+    //console.log(detailTracteur);
+    const token = localStorage.getItem("token");
+    if (token) {
+      // Si un token est présent, récupérer le userId connecté
+      const userId = localStorage.getItem("userId");
+      setUserId(userId);
+    }
   }, [idArticle]);
 
   const handleInputChange = (e) => {
@@ -71,55 +83,68 @@ function Detail() {
         setIsEditing(false);
       })
       .catch((error) =>
-        console.error("Erreur lors de la requête PUT :", error)
+        console.error("Erreur lors de la requête PUT :", error),
       );
   };
 
   return (
-    <div>
-      <h2>id Article {idArticle}</h2>
+    <div className="modale-container">
       {!isEditing ? (
-        <div>
-          <h1>{detailTracteur.name}</h1>
+        <div className="tracteur-details">
+          <h1 className="tracteur-name">{detailTracteur.name}</h1>
           <img
+            className="tracteur-cover"
             src={detailTracteur.cover}
             alt={`${detailTracteur.name} cover`}
           />
-          <h2>Prix : {detailTracteur.price} euros</h2>
-          <h2>Consomation : {detailTracteur.fuel}</h2>
-          <h2>Chevaux : {detailTracteur.chevaux}</h2>
-          <h2>Category : {detailTracteur.category}</h2>
-          <button onClick={() => setIsEditing(true)}>Modifier</button>
-          <label>Nom:</label>
-          <input
-            type="text"
-            name="name"
-            value={updatedTracteur.name}
-            onChange={handleInputChange}
-          />
-          <input type="file" onChange={handleImageChange} />
-          <button
-            onClick={() => {
-              handleUpdateTracteur();
-              handleImageUpload();
-            }}
-          >
-            Enregistrer
-          </button>
-          <button onClick={() => setIsEditing(false)}>Annuler</button>
+          <h2 className="tracteur-price">
+            Prix : {detailTracteur.price} euros
+          </h2>
+          <h2 className="tracteur-fuel">Consomation : {detailTracteur.fuel}</h2>
+          <h2 className="tracteur-chevaux">
+            Chevaux : {detailTracteur.chevaux}
+          </h2>
+          <h2 className="tracteur-category">
+            Category : {detailTracteur.category}
+          </h2>
+          {userId === "7" && (
+            <button className="edit-button" onClick={() => setIsEditing(true)}>
+              Modifier
+            </button>
+          )}
         </div>
       ) : (
-        <div>
-          <label>Nom:</label>
+        <div className="edit-mode">
+          <label className="name-label">Nom:</label>
           <input
             type="text"
             name="name"
             value={updatedTracteur.name}
             onChange={handleInputChange}
+            className="name-input"
           />
-          {/* Ajoutez d'autres champs pour les autres propriétés */}
-          <button onClick={handleUpdateTracteur}>Enregistrer</button>
-          <button onClick={() => setIsEditing(false)}>Annuler</button>
+          <input
+            type="file"
+            onChange={handleImageChange}
+            className="file-input"
+          />
+          <div className="edit-mode-button">
+            <button
+              onClick={() => setIsEditing(false)}
+              className="cancel-button"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={() => {
+                handleUpdateTracteur();
+                handleImageUpload();
+              }}
+              className="save-button"
+            >
+              Enregistrer
+            </button>
+          </div>
         </div>
       )}
     </div>

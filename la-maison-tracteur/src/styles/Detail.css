@@ -1,0 +1,108 @@
+/* Styles généraux */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.modale-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Styles pour les éléments spécifiques */
+.tracteur-details {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tracteur-name {
+    color: #1d5f00;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.tracteur-price,
+.tracteur-fuel,
+.tracteur-chevaux,
+.tracteur-category {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.tracteur-cover {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.edit-button {
+    background-color: #1d5f00;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.edit-button:hover {
+    background-color: #144500;
+}
+
+.edit-mode {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.name-label {
+    color: #1d5f00;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.name-input,
+.file-input {
+    padding: 8px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.edit-mode-button{
+    justify-content: space-between;
+    display: flex;
+}
+
+.save-button {
+    background-color: #1d5f00;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.cancel-button {
+    background-color: #1d5f00;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.save-button:hover,
+.cancel-button:hover {
+    background-color: #144500;
+}
+

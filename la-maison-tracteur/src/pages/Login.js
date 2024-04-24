@@ -16,13 +16,13 @@ function Login() {
     }
     const modaleContainer = document.querySelector(".modale-container");
     const inputSignup = modaleContainer.querySelector(
-      ".signup-section .mdp input"
+      ".signup-section .mdp input",
     );
     const showBtnSignup = modaleContainer.querySelector(
-      ".signup-section .mdp i"
+      ".signup-section .mdp i",
     );
     const inputLogin = modaleContainer.querySelector(
-      ".login-section .mdp input"
+      ".login-section .mdp input",
     );
     const showBtnLogin = modaleContainer.querySelector(".login-section .mdp i");
 
@@ -184,7 +184,7 @@ function Login() {
             <div className="mdp">
               <input
                 type="password"
-                id="SignupPassword"
+                id="loginPassword"
                 name="password"
                 className="form-control"
                 value={password}

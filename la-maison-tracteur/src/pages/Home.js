@@ -15,10 +15,6 @@ function Home() {
 
   return (
     <div>
-      <Banner>
-        <img src={logo} alt="logo-la-maison-tracteur" className="lmt-logo" />
-        <h1 className="lmt-title">Fendt</h1>
-      </Banner>
       <div className="lmt-layout-inner">
         <Cart cart={cart} updateCart={updateCart} />
         <ShoppingList cart={cart} updateCart={updateCart} />
