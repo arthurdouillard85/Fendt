@@ -2,14 +2,41 @@ import { Link } from "react-router-dom";
 import Banner from "./Banner";
 import logo from "../assets/logo.png";
 import "../styles/Header.css";
+import { useEffect, useState } from "react";
 
 function Header() {
+  const [userId, setUserId] = useState("");
+  const [role, setRole] = useState("");
+
+  useEffect(() => {
+    const userIdFromLocalStorage = localStorage.getItem("userId");
+    setUserId(userIdFromLocalStorage);
+
+    // Requête pour récupérer le role de l'utilisateur à partir de l'ID de l'utilisateur
+    fetch(`http://localhost:3001/profile/${userIdFromLocalStorage}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.role) {
+          setRole(data.role);
+        } else {
+          console.error("Impossible de récupérer le role de l'utilisateur.");
+        }
+      })
+      .catch((error) =>
+        console.error(
+          "Une erreur s'est produite lors de la récupération de l'email de l'utilisateur :",
+          error,
+        ),
+      );
+  }, [userId]);
+
   return (
     <nav>
       <Link to="/">Accueil</Link>&nbsp;&nbsp;
       <Link to="/question/1">Questionnaire</Link>&nbsp;&nbsp;
       <Link to="/login">Se connecter</Link>&nbsp;&nbsp;
       <Link to="/profile">Profile</Link>&nbsp;&nbsp;
+      {role === "admin" && <Link to="/users">Admin</Link>}&nbsp;&nbsp;
       <div className="lmt-container">
         <Banner>
           <img src={logo} alt="logo-la-maison-tracteur" className="lmt-logo" />

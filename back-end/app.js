@@ -51,6 +51,21 @@ app.get("/", (req, res, next) => {
     }
   });
 });
+
+// Route pour gérer la récupération des utilisateurs
+app.get("/users", (req, res) => {
+  connection.query("SELECT * FROM utilisateur", (error, results) => {
+    if (error) {
+      console.error("Erreur lors de la récupération des utilisateurs :", error);
+      res.status(500).json({
+        error: "Erreur serveur lors de la récupération des utilisateurs.",
+      });
+    } else {
+      res.status(200).json({ users: results });
+    }
+  });
+});
+
 //je récupère un seul tracteur en fonction de son id
 app.get("/:id", (req, res, next) => {
   const tracteurId = req.params.id;
@@ -70,6 +85,58 @@ app.get("/:id", (req, res, next) => {
         } else {
           // Si aucun résultat n'est trouvé, renvoyer une réponse 404
           res.status(404).json({ error: "Aucun tracteur trouvé avec cet ID." });
+        }
+      }
+    },
+  );
+});
+
+app.put("/users/:id", (req, res) => {
+  const userId = req.params.id;
+  const { role } = req.body;
+  connection.query(
+    "UPDATE utilisateur SET role = ? WHERE id = ?",
+    [role, userId],
+    (error, updateResults) => {
+      if (error) {
+        console.error(
+          "Erreur lors de la mise à jour du rôle de l'utilisateur :",
+          error,
+        );
+        res.status(500).json({
+          error:
+            "Erreur serveur lors de la mise à jour du rôle de l'utilisateur.",
+        });
+      } else {
+        if (updateResults.affectedRows > 0) {
+          // Si la mise à jour a réussi, récupérez les détails de l'utilisateur mis à jour
+          connection.query(
+            "SELECT * FROM utilisateur WHERE id = ?",
+            [userId],
+            (selectError, selectResults) => {
+              if (selectError) {
+                console.error(
+                  "Erreur lors de la récupération de l'utilisateur mis à jour :",
+                  selectError,
+                );
+                res.status(500).json({
+                  error:
+                    "Erreur serveur lors de la récupération de l'utilisateur mis à jour.",
+                });
+              } else {
+                if (selectResults.length > 0) {
+                  const updatedUser = selectResults[0];
+                  res.status(200).json({ user: updatedUser }); // Renvoyer l'utilisateur mis à jour
+                } else {
+                  res
+                    .status(404)
+                    .json({ error: "L'utilisateur n'existe pas." });
+                }
+              }
+            },
+          );
+        } else {
+          res.status(404).json({ error: "L'utilisateur n'existe pas." });
         }
       }
     },

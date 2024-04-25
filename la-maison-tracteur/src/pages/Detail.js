@@ -128,7 +128,7 @@ function Detail() {
           <h2 className="tracteur-category">
             Category : {detailTracteur.category}
           </h2>
-          {role === "gestionnaire" && (
+          {role === "admin" && (
             <button className="edit-button" onClick={() => setIsEditing(true)}>
               Modifier
             </button>

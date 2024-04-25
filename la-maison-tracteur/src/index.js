@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Questionnaire from "./pages/Questionnaire";
+import Utilisateurs from "./pages/Utilisateurs";
 
 import { Route, BrowserRouter as Router } from "react-router-dom";
 
@@ -30,6 +31,9 @@ root.render(
       </Route>
       <Route path="/profile">
         <Profile />
+      </Route>
+      <Route path="/users">
+        <Utilisateurs />
       </Route>
     </Router>
   </React.StrictMode>,
