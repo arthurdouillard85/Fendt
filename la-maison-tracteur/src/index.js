@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Detail from "./pages/Detail";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Logout from "./pages/Logout";
 import Profile from "./pages/Profile";
 import Questionnaire from "./pages/Questionnaire";
 import Utilisateurs from "./pages/Utilisateurs";
@@ -11,6 +12,7 @@ import Utilisateurs from "./pages/Utilisateurs";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 
 import "./styles/index.css";
+import Products from "./pages/Products";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -19,6 +21,9 @@ root.render(
       <Header />
       <Route exact path="/">
         <Home />
+      </Route>
+      <Route exact path="/products">
+        <Products />
       </Route>
       <Route path="/detail/:idArticle">
         <Detail />
@@ -34,6 +39,9 @@ root.render(
       </Route>
       <Route path="/users">
         <Utilisateurs />
+      </Route>
+      <Route path="/logout">
+        <Logout />
       </Route>
     </Router>
   </React.StrictMode>,

@@ -1,37 +1,84 @@
-nav {
-    background-color: #1d5f00;
+.header.home .navbar {
+    background-color: transparent;
+    height: 80px;
     color: #fff;
     padding: 10px 20px;
     display: flex;
     align-items: center;
+    font-size: 1.2rem;
     width: 100%;
     position: fixed;
     top: 0;
-    z-index: 1000;
+    z-index: 999;
 }
 
-nav a {
+.header.home .navbar.active {
+    background: linear-gradient(90deg,  rgba(29, 95, 0, 1) 0%,  rgba(29, 95, 0, 1) 100%);
+}
+
+.header.home nav a {
     color: #fff;
     text-decoration: none;
     margin-right: 20px;
 }
 
-nav a:hover {
+.header.home nav a:hover {
     text-decoration: underline;
 }
 
-.lmt-container {
+.header.home .lmt-container {
     margin-left: auto;
 }
 
-.lmt-logo {
+.header.home .lmt-logo {
     width: 40px;
     height: 40px;
     margin-right: 10px;
 }
 
-.lmt-title {
+.header.home .lmt-title {
     font-size: 24px;
     margin: 0;
 }
+
+.header .navbar {
+    background-color: #1d5f00;
+    height: 80px;
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    width: 100vw;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.header nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.header.home nav a:hover {
+    text-decoration: underline;
+}
+
+.header .lmt-container {
+    margin-left: auto;
+}
+
+.header .lmt-logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.header .lmt-title {
+    font-size: 24px;
+    margin: 0;
+}
+
+
 

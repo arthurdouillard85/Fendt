@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
-import logo from "../assets/logo.png";
-import Banner from "../components/Banner";
-import Cart from "../components/Cart";
-import Footer from "../components/Footer";
-import ShoppingList from "../components/ShoppingList";
-import "../styles/Layout.css";
+import "../styles/Home.css";
+import backgroundVideo from "../assets/background.mp4";
 
 function Home() {
   const savedCart = localStorage.getItem("cart");
@@ -14,12 +10,20 @@ function Home() {
   }, [cart]);
 
   return (
-    <div>
-      <div className="lmt-layout-inner">
-        <Cart cart={cart} updateCart={updateCart} />
-        <ShoppingList cart={cart} updateCart={updateCart} />
+    <div className="home-page">
+      <div className="background-video">
+        <video autoPlay loop muted>
+          <source src={backgroundVideo} type="video/mp4" />
+          Votre navigateur ne supporte pas la vidéo.
+        </video>
       </div>
-      <Footer />
+      <div className="additional-info">
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+      </div>
     </div>
   );
 }
