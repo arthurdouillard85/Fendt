@@ -1,31 +1,42 @@
 import React, { useState, useEffect } from "react";
-import "../styles/Profile.css"
+import "../styles/Profile.css";
 
 function Profile() {
   const [email, setEmail] = useState("");
   const [userId, setUserId] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [adresse, setAdresse] = useState("");
 
   useEffect(() => {
-      const userIdFromLocalStorage = localStorage.getItem("userId");
-      setUserId(userIdFromLocalStorage);
+    const userIdFromLocalStorage = localStorage.getItem("userId");
+    setUserId(userIdFromLocalStorage);
 
-      // Requête pour récupérer l'email de l'utilisateur à partir de l'ID de l'utilisateur
-      fetch(`http://localhost:3001/profile/${userIdFromLocalStorage}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.email) {
-            setEmail(data.email);
-          } else {
-            console.error("Impossible de récupérer l'email de l'utilisateur.");
-          }
-        })
-        .catch(error => console.error("Une erreur s'est produite lors de la récupération de l'email de l'utilisateur :", error));
-    }, []);
+    // Requête pour récupérer l'email, le téléphone et l'adresse de l'utilisateur à partir de l'ID de l'utilisateur
+    fetch(`http://localhost:3001/profile/${userIdFromLocalStorage}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          setEmail(data.email);
+          setTelephone(data.telephone);
+          setAdresse(data.adresse);
+        } else {
+          console.error("Impossible de récupérer l'email de l'utilisateur.");
+        }
+      })
+      .catch((error) =>
+        console.error(
+          "Une erreur s'est produite lors de la récupération de l'email de l'utilisateur :",
+          error,
+        ),
+      );
+  }, []);
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [newTelephone, setNewTelephone] = useState("");
+  const [newAdresse, setNewAdresse] = useState("");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -68,46 +79,170 @@ function Profile() {
         setErrorMessage(errorData.message);
       }
     } catch (error) {
-      console.error("Une erreur s'est produite lors du changement de mot de passe :", error);
-      setErrorMessage("Une erreur s'est produite lors du changement de mot de passe.");
+      console.error(
+        "Une erreur s'est produite lors du changement de mot de passe :",
+        error,
+      );
+      setErrorMessage(
+        "Une erreur s'est produite lors du changement de mot de passe.",
+      );
     }
   };
 
+  const handleChangeTelephone = async () => {
+    // Vérifier si les champs sont vides
+    if (!newTelephone) {
+      setErrorMessage("Veuillez remplir tous les champs.");
+      return;
+    }
+    try {
+      const url = "http://localhost:3001/change-telephone";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          telephone: newTelephone,
+        }),
+      });
+      if (response.ok) {
+        console.log("Numéro de téléphone changé avec succès !");
+        setErrorMessage("");
+        setTelephone(newTelephone);
+        setNewTelephone("");
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message);
+      }
+    } catch (error) {
+      console.error(
+        "Une erreur s'est produite lors du changement du numéro de téléphone :",
+        error,
+      );
+      setErrorMessage(
+        "Une erreur s'est produite lors du changement du numéro de téléphone.",
+      );
+    }
+    window.location.reload();
+  };
+
+  const handleChangeAdresse = async () => {
+    // Vérifier si les champs sont vides
+    if (!newAdresse) {
+      setErrorMessage("Veuillez remplir tous les champs.");
+      return;
+    }
+    try {
+      const url = "http://localhost:3001/change-adresse";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          adresse: newAdresse,
+        }),
+      });
+      if (response.ok) {
+        console.log("Adresse changée avec succès !");
+        setErrorMessage("");
+        setAdresse(newAdresse);
+        setNewAdresse("");
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message);
+      }
+    } catch (error) {
+      console.error(
+        "Une erreur s'est produite lors du changement de l'adresse :",
+        error,
+      );
+      setErrorMessage(
+        "Une erreur s'est produite lors du changement de l'adresse.",
+      );
+    }
+    window.location.reload();
+  };
+
   return (
-    <div className="modale-container">
-        <div className="profile-container">
-          <h2>Profil Utilisateur</h2>
-          <p className="email-label">Email : {email}</p>
-          {/* Changer le mot de passe */}
-          <div className="password-change">
-            <h3>Changer le mot de passe</h3>
-            <input
-              className="password-input"
-              type="password"
-              placeholder="Ancien mot de passe"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-            />
-            <input
-              className="password-input"
-              type="password"
-              placeholder="Nouveau mot de passe"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <input
-              className="password-input"
-              type="password"
-              placeholder="Confirmer le nouveau mot de passe"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <button className="password-change-btn" onClick={handleChangePassword}>Changer le mot de passe</button>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-          </div>
-          {/* Déconnexion */}
-          <button className="logout-btn" onClick={handleLogout}>Déconnexion</button>
+    <div className="profile-container">
+      <h2>Profil Utilisateur</h2>
+      <p className="email-label">Email : {email}</p>
+      <p className="email-label">Téléphone : {telephone}</p>
+      <p className="email-label">Adresse : {adresse}</p>
+      <div className="profile-details-container">
+        {/* Changer le mot de passe */}
+        <div className="password-change">
+          <h3>Changer le mot de passe</h3>
+          <input
+            className="password-input"
+            type="password"
+            placeholder="Ancien mot de passe"
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+          />
+          <input
+            className="password-input"
+            type="password"
+            placeholder="Nouveau mot de passe"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+          <input
+            className="password-input"
+            type="password"
+            placeholder="Confirmer le nouveau mot de passe"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          <button
+            className="password-change-btn"
+            onClick={handleChangePassword}
+          >
+            Changer le mot de passe
+          </button>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
+        <div className="contact-change">
+          <div className="telephone-change">
+            <h3>Changer le numéro de téléphone</h3>
+            <input
+              className="telephone-input"
+              type="text"
+              placeholder="Nouveau numéro de téléphone"
+              onChange={(e) => setNewTelephone(e.target.value)}
+            />
+            <button
+              className="telephone-change-btn"
+              onClick={handleChangeTelephone}
+            >
+              Changer le numéro de téléphone
+            </button>
+          </div>
+          <div className="adresse-change">
+            <h3>Changer l'adresse</h3>
+            <input
+              className="adresse-input"
+              type="text"
+              placeholder="Nouvelle adresse"
+              onChange={(e) => setNewAdresse(e.target.value)}
+            />
+            <button
+              className="adresse-change-btn"
+              onClick={handleChangeAdresse}
+            >
+              Changer l'adresse
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* Déconnexion */}
+      <button className="logout-btn" onClick={handleLogout}>
+        Déconnexion
+      </button>
     </div>
   );
 }

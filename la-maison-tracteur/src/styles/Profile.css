@@ -1,18 +1,13 @@
-.modale-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-}
-
 .profile-container {
-  max-width: 400px;
-  margin: 0 auto;
+  margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+  width: 60%;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
+  display: block;
 }
 
 .profile-container h2 {
@@ -24,11 +19,26 @@
   margin-bottom: 20px;
 }
 
-.password-change {
+.profile-details-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.password-change,
+.telephone-change,
+.adresse-change {
+  flex: 1;
+  margin-right: 20px;
   margin-bottom: 20px;
 }
 
-.password-input {
+.password-change:last-child {
+  margin-right: 0;
+}
+
+.password-input,
+.telephone-input,
+.adresse-input {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -36,7 +46,9 @@
   border-radius: 5px;
 }
 
-.password-change-btn {
+.password-change-btn,
+.telephone-change-btn,
+.adresse-change-btn {
   display: block;
   width: 100%;
   padding: 10px;
@@ -45,6 +57,11 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.contact-change {
+  display: flex;
+  flex-direction: column;
 }
 
 .error-message {

@@ -331,7 +331,8 @@ const getUserProfile = (req, res) => {
     const userId = req.params.userId;
 
     // Requête pour récupérer l'email de l'utilisateur depuis la base de données
-    const selectQuery = "SELECT email,role FROM utilisateur WHERE id = ?";
+    const selectQuery =
+      "SELECT email,role,telephone,adresse FROM utilisateur WHERE id = ?";
     connection.query(selectQuery, [userId], (error, results) => {
       if (error) {
         console.error(
@@ -350,9 +351,16 @@ const getUserProfile = (req, res) => {
       // Récupérer l'email de l'utilisateur à partir des résultats de la requête
       const userEmail = results[0].email;
       const userRole = results[0].role;
+      const userTelephone = results[0].telephone;
+      const userAdresse = results[0].adresse;
 
       // Renvoyer l'email de l'utilisateur en tant que réponse
-      res.json({ email: userEmail, role: userRole });
+      res.json({
+        email: userEmail,
+        role: userRole,
+        telephone: userTelephone,
+        adresse: userAdresse,
+      });
     });
   } catch (error) {
     // Gérer les erreurs et renvoyer un message d'erreur approprié
@@ -425,6 +433,66 @@ app.post("/change-password", async (req, res) => {
     );
     res.status(500).json({
       message: "Une erreur s'est produite lors du changement de mot de passe.",
+    });
+  }
+});
+
+app.post("/change-telephone", async (req, res) => {
+  // Récupérer les données du corps de la requête
+  const { userId, telephone } = req.body;
+
+  try {
+    // Requête pour mettre à jour le téléphone dans la base de données
+    const updateQuery = "UPDATE utilisateur SET telephone = ? WHERE id = ?";
+    connection.query(
+      updateQuery,
+      [telephone, userId],
+      (updateError, updateResults) => {
+        if (updateError) {
+          throw updateError;
+        }
+        console.log("Téléphone changé avec succès.");
+        res.json({ message: "Téléphone changé avec succès." });
+      },
+    );
+  } catch (error) {
+    // Gérer les erreurs
+    console.error(
+      "Une erreur s'est produite lors du changement de téléphone :",
+      error,
+    );
+    res.status(500).json({
+      message: "Une erreur s'est produite lors du changement de téléphone.",
+    });
+  }
+});
+
+app.post("/change-adresse", async (req, res) => {
+  // Récupérer les données du corps de la requête
+  const { userId, adresse } = req.body;
+
+  try {
+    // Requête pour mettre à jour l'adresse dans la base de données
+    const updateQuery = "UPDATE utilisateur SET adresse = ? WHERE id = ?";
+    connection.query(
+      updateQuery,
+      [adresse, userId],
+      (updateError, updateResults) => {
+        if (updateError) {
+          throw updateError;
+        }
+        console.log("Adresse changée avec succès.");
+        res.json({ message: "Adresse changée avec succès." });
+      },
+    );
+  } catch (error) {
+    // Gérer les erreurs
+    console.error(
+      "Une erreur s'est produite lors du changement d'adresse :",
+      error,
+    );
+    res.status(500).json({
+      message: "Une erreur s'est produite lors du changement d'adresse.",
     });
   }
 });

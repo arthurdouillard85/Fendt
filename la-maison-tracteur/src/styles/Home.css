@@ -1,3 +1,11 @@
+.home-page{
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .background-video {
     position: relative;
     width: 100%;
