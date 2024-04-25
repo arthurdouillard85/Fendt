@@ -65,7 +65,7 @@ export default function Utilisateurs() {
             <th>Prénom</th>
             <th>Nom</th>
             <th>Email</th>
-            <th>Role</th>
+            <th>Administrateur</th>
           </tr>
         </thead>
         <tbody>
@@ -76,7 +76,6 @@ export default function Utilisateurs() {
                 <td>{user.prenom}</td>
                 <td>{user.email}</td>
                 <td>
-                  Admin &nbsp;
                   <label
                     className="slider-checkbox"
                     onClick={(e) => e.stopPropagation()}
