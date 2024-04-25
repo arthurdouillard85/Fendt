@@ -224,20 +224,20 @@ app.post("/upload", upload.single("image"), async (req, res) => {
 
 // bcrypt : Ajouter un nouvel utilisateur
 app.post("/signup", (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, nom, prenom } = req.body;
   // Vérifier si l'email et le mot de passe sont présents dans la requête
-  if (email && password) {
+  if (email && password && nom && prenom) {
     // Hasher le mot de passe avant de l'enregistrer dans la base de données
     bcrypt.hash(password, 10, (hashError, hashedPassword) => {
       if (hashError) {
         console.error("Erreur lors du hachage du mot de passe :", hashError);
         res
           .status(500)
-          .json({ error: "Erreur serveur lors création utilisateur." });
+          .json({ error: "Erreur serveur lors du hashage du mot de passe." });
       } else {
         connection.query(
-          "INSERT INTO utilisateur (email, password) VALUES (?, ?)",
-          [email, hashedPassword],
+          "INSERT INTO utilisateur (email, password, nom, prenom) VALUES (?, ?, ?, ?)",
+          [email, hashedPassword, nom, prenom],
           (error, results) => {
             if (error) {
               console.error(

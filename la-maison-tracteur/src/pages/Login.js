@@ -2,10 +2,17 @@ import React, { useEffect, useState } from "react";
 import "../styles/Login.css";
 
 function Login() {
-  const [email, setEmail] = useState(""); // Etat qui Stocke l'email de l'utilisateur
-  const [password, setPassword] = useState(""); // Etat qui Stocke le mot de passe de l'utilisateur.
   const [isSignup, setIsSignup] = useState(true);
   const [errorMessage, setErrorMessage] = useState(""); // Stocke les messages d'erreur à afficher.
+  // Etats pour le formulaire d'inscription
+  const [signupNom, setSignupNom] = useState(""); // Ajout de l'état pour le nom
+  const [signupPrenom, setSignupPrenom] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+
+  // Etats pour le formulaire de connexion
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
 
   useEffect(() => {
     // Vérifiez si un token est déjà stocké localement
@@ -14,60 +21,55 @@ function Login() {
       // Si un token est présent, redirigez l'utilisateur vers la page de profil
       window.location.href = "/profile";
     }
-    const modaleContainer = document.querySelector(".modale-container");
-    const inputSignup = modaleContainer.querySelector(
-      ".signup-section .mdp input",
-    );
-    const showBtnSignup = modaleContainer.querySelector(
-      ".signup-section .mdp i",
-    );
-    const inputLogin = modaleContainer.querySelector(
-      ".login-section .mdp input",
-    );
-    const showBtnLogin = modaleContainer.querySelector(".login-section .mdp i");
 
     const container = document.querySelector(".container");
     const signupButton = document.querySelector(".signup-section header");
     const loginButton = document.querySelector(".login-section header");
 
-    showBtnSignup.addEventListener("click", () => {
-      if (inputSignup.type === "password") {
-        inputSignup.type = "text";
-        showBtnSignup.classList.remove("bxs-show");
-        showBtnSignup.classList.add("bxs-hide");
-      } else {
-        inputSignup.type = "password";
-        showBtnSignup.classList.remove("bxs-hide");
-        showBtnSignup.classList.add("bxs-show");
-      }
-    });
-
-    showBtnLogin.addEventListener("click", () => {
-      if (inputLogin.type === "password") {
-        inputLogin.type = "text";
-        showBtnLogin.classList.remove("bxs-show");
-        showBtnLogin.classList.add("bxs-hide");
-      } else {
-        inputLogin.type = "password";
-        showBtnLogin.classList.remove("bxs-hide");
-        showBtnLogin.classList.add("bxs-show");
-      }
-    });
-
     loginButton.addEventListener("click", () => {
-      setIsSignup(false);
       container.classList.add("active");
     });
 
     signupButton.addEventListener("click", () => {
-      setIsSignup(true);
       container.classList.remove("active");
     });
+
+    const showSignupPasswordButton =
+      document.getElementById("showSignupPassword");
+    const showLoginPasswordButton =
+      document.getElementById("showLoginPassword");
+
+    if (showSignupPasswordButton && showLoginPasswordButton) {
+      showSignupPasswordButton.addEventListener(
+        "click",
+        togglePasswordVisibility,
+      );
+      showLoginPasswordButton.addEventListener(
+        "click",
+        togglePasswordVisibility,
+      );
+    }
   }, []);
 
+  function togglePasswordVisibility(e) {
+    const passwordInput = e.target.previousElementSibling;
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      e.target.classList.remove("bxs-show");
+      e.target.classList.add("bxs-hide");
+    } else {
+      passwordInput.type = "password";
+      e.target.classList.remove("bxs-hide");
+      e.target.classList.add("bxs-show");
+    }
+  }
+
   const handleSubmit = async (e) => {
-    //Lorsque l'utilisateur soumet le formulaire, la fonction handleSubmit envoie une requête POST au backend (soit /signup pour l'inscription, soit /login pour la connexion) avec les données email et password.
     e.preventDefault();
+    const email = isSignup ? signupEmail : loginEmail;
+    const password = isSignup ? signupPassword : loginPassword;
+    const nom = isSignup ? signupNom : null;
+    const prenom = isSignup ? signupPrenom : null;
     try {
       const url = isSignup
         ? "http://localhost:3001/signup"
@@ -77,7 +79,7 @@ function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, nom, prenom }),
       });
       if (!response.ok) {
         // Si la réponse n'est pas OK, gérer l'erreur
@@ -101,7 +103,7 @@ function Login() {
     <div className="modale-container">
       <div className="container">
         <div className="signup-section">
-          <header>Sign up</header>
+          <header onClick={() => setIsSignup(true)}>Sign up</header>
 
           <div className="social-buttons">
             <button>
@@ -116,16 +118,42 @@ function Login() {
             <p>Or</p>
             <div className="line"></div>
           </div>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e) => handleSubmit(e)}>
+            <div className="custom-input">
+              <input
+                type="text"
+                id="signupNom"
+                name="nom"
+                className="form-control"
+                placeholder="Nom"
+                value={signupNom}
+                onChange={(e) => setSignupNom(e.target.value)}
+                autoComplete="off"
+              />
+              <i className="bx bx-user"></i>
+            </div>
+            <div className="custom-input">
+              <input
+                type="text"
+                id="signupPrenom"
+                name="prenom"
+                className="form-control"
+                placeholder="Prenom"
+                value={signupPrenom}
+                onChange={(e) => setSignupPrenom(e.target.value)}
+                autoComplete="off"
+              />
+              <i className="bx bx-user"></i>
+            </div>
             <div className="custom-input">
               <input
                 type="email"
-                id="email"
+                id="signupEmail"
                 name="email"
                 className="form-control"
                 placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={signupEmail}
+                onChange={(e) => setSignupEmail(e.target.value)}
                 autoComplete="off"
               />
               <i className="bx bx-at"></i>
@@ -133,15 +161,15 @@ function Login() {
             <div className="mdp">
               <input
                 type="password"
-                id="loginPassword"
+                id="signupPassword"
                 name="password"
                 className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={signupPassword}
+                onChange={(e) => setSignupPassword(e.target.value)}
                 placeholder="Mot de passe"
                 required
               />
-              <i className="bx bxs-show"></i>
+              <i id="showSignupPassword" className="bx bxs-show"></i>
             </div>
             <button type="submit" className="btn">
               Sign up
@@ -150,7 +178,7 @@ function Login() {
         </div>
 
         <div className="login-section">
-          <header>Login</header>
+          <header onClick={() => setIsSignup(false)}>Login</header>
 
           <div className="social-buttons">
             <button>
@@ -167,15 +195,15 @@ function Login() {
             <div className="line"></div>
           </div>
           {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e) => handleSubmit(e)}>
             <div className="custom-input">
               <input
                 type="email"
-                id="email"
+                id="loginEmail"
                 name="email"
                 className="form-control"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
                 placeholder="Email"
                 required
               />
@@ -185,14 +213,14 @@ function Login() {
               <input
                 type="password"
                 id="loginPassword"
-                name="password"
+                name="loginPassword"
                 className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
                 placeholder="Mot de passe"
                 required
               />
-              <i className="bx bxs-show"></i>
+              <i id="showLoginPassword" className="bx bxs-show"></i>
             </div>
 
             <button type="submit" className="btn">
