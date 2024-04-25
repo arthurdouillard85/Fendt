@@ -1,0 +1,22 @@
+.background-video {
+    position: relative;
+    width: 100%;
+    height: 50vh; /* Ajustez la hauteur de la vidéo ici */
+    overflow: hidden;
+}
+
+.background-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.additional-info {
+    min-height: 50vh; /* Ajustez la hauteur minimale ici */
+}
+
+.additional-info h1 {
+    text-align: center;
+    margin-top: 2rem;
+    color: #144500;
+}

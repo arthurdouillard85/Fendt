@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/Detail.css";
-import Banner from "../components/Banner";
-import Header from "../components/Header";
-import logo from "../assets/logo.png";
 
 function Detail() {
   const { idArticle } = useParams();
