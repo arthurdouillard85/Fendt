@@ -1,35 +1,68 @@
+.lmt-cart, .lmt-cart-profile {
+  right: 0;
+  width: 20%;
+  height: 87vh;
+  padding: 20px;
+  background-color: #eee;
+  border-radius: 10px;
+  margin: 20px 15px 0 20px;
+  overflow: auto;
+}
+
 .lmt-cart {
-  color: white;
-  background-color: green;
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 300px;
+  position: fixed;
 }
 
-.lmt-cart-add-button {
-  margin-left: 32px;
-  cursor: pointer;
+.lmt-cart-profile {
+  position: absolute;
 }
 
-.lmt-cart-toggle-button {
-  background: none;
-  outline: none;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  align-self: self-start;
+.lmt-cart-profile {
+  margin-top: 100px;
+}
+
+.lmt-cart h2, .lmt-cart-profile h2 {
+  margin-bottom: 20px;
+  color: #333333;
+}
+
+.lmt-cart ul, .lmt-cart-profile ul {
+  list-style-type: none;
   padding: 0;
+}
+
+.lmt-cart ul div, .lmt-cart-profile ul div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.lmt-cart ul div img, .lmt-cart-profile ul div img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.lmt-cart button, .lmt-cart-profile button {
+  position: absolute;
+  bottom: 20px;
   color: white;
-  align-self: flex-end;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
-.lmt-cart-closed {
-  padding: 32px;
-  width: 300px;
+.lmt-cart button {
+  background-color: #ff6347;
 }
 
-.lmt-cart-closed > button {
-  color: black;
+.lmt-cart-profile button {
+  background-color: #90EE90;
 }

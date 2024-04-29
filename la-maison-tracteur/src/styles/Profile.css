@@ -1,8 +1,9 @@
 .profile-container {
-  margin-top: 10px;
+  position: relative;
+  margin-top: 100px;
     margin-left: auto;
     margin-right: auto;
-  width: 60%;
+  width: 58%;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;

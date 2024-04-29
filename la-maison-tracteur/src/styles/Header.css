@@ -50,7 +50,7 @@
     align-items: center;
     font-size: 1.2rem;
     width: 100vw;
-    position: sticky;
+    position: fixed;
     top: 0;
     z-index: 999;
 }
@@ -69,16 +69,22 @@
     margin-left: auto;
 }
 
-.header .lmt-logo {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-}
-
 .header .lmt-title {
     font-size: 24px;
     margin: 0;
 }
 
+.header .lmt-logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    margin-left: auto;
+}
 
+.header .lmt-logo-cart {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    margin-left: auto;
+}
 

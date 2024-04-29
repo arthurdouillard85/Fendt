@@ -1,13 +1,18 @@
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
+import cartClosed from "../assets/panier_fermer.png"; // Importez votre image de panier fermé
+import cartOpen from "../assets/panier_ouvert.png";
+import CartOpenContext from "../context/CartOpenContext";
 import "../styles/Header.css";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
-function Header() {
+function Header({ cart, updateCart }) {
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState("");
   const [navbar, setNavbar] = useState(false);
   const location = useLocation();
+
+  const { isCartOpen, setIsCartOpen } = useContext(CartOpenContext);
 
   useEffect(() => {
     if (localStorage.getItem("userId") === null) {
@@ -62,6 +67,15 @@ function Header() {
           <Link to="/login">LOGIN</Link>
         )}
         {role === "admin" && <Link to="/users">ADMIN</Link>}&nbsp;&nbsp;
+        <div className="lmt-logo-cart">
+          {role === "utilisateur" && location.pathname === "/products" && (
+            <img
+              src={isCartOpen ? cartOpen : cartClosed}
+              alt="Cart"
+              onClick={() => setIsCartOpen(!isCartOpen)}
+            />
+          )}
+        </div>
       </nav>
     </div>
   );

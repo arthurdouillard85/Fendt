@@ -23,6 +23,66 @@ function Home() {
           Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
           la vidéo.
         </p>
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+        v v<h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
+        <h1>Informations supplémentaires</h1>
+        <p>
+          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
+          la vidéo.
+        </p>
       </div>
     </div>
   );

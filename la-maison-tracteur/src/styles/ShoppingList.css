@@ -2,6 +2,10 @@
   width: 100%;
 }
 
+.lmt-shopping-list-with-cart {
+  width: 81%;
+}
+
 .lmt-tracteur-list {
   list-style-type: none;
   padding: 32px;

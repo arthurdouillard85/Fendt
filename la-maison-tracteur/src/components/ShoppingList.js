@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "../styles/ShoppingList.css";
 import Categories from "./Categories";
 import TracteurItem from "./TracteurItem";
+import CartOpenContext from "../context/CartOpenContext";
 
 function ShoppingList({ cart, updateCart }) {
   const [tracteurList, setTracteurList] = useState([]);
   const [activeCategory, setActiveCategory] = useState("");
+  const { isCartOpen } = useContext(CartOpenContext);
 
   useEffect(() => {
     fetch("http://localhost:3001/")
@@ -18,31 +20,37 @@ function ShoppingList({ cart, updateCart }) {
       });
   }, []);
 
-  const categories = tracteurList.reduce(
-    (acc, elem) =>
-      acc.includes(elem.category) ? acc : acc.concat(elem.category),
-    []
-  );
+  const categories = Array.isArray(tracteurList)
+    ? tracteurList.reduce(
+        (acc, elem) =>
+          acc.includes(elem.category) ? acc : acc.concat(elem.category),
+        [],
+      )
+    : [];
 
-  function addToCart(name, price) {
+  function addToCart(name, price, cover) {
     const currentTracteurAdded = cart.find(
-      (tracteur) => tracteur.name === name
+      (tracteur) => tracteur.name === name,
     );
     if (currentTracteurAdded) {
       const cartFilteredCurrentTracteur = cart.filter(
-        (tracteur) => tracteur.name !== name
+        (tracteur) => tracteur.name !== name,
       );
       updateCart([
         ...cartFilteredCurrentTracteur,
-        { name, price, amount: currentTracteurAdded.amount + 1 },
+        { name, price, cover, amount: currentTracteurAdded.amount + 1 },
       ]);
     } else {
-      updateCart([...cart, { name, price, amount: 1 }]);
+      updateCart([...cart, { name, price, cover, amount: 1 }]);
     }
   }
 
   return (
-    <div className="lmt-shopping-list">
+    <div
+      className={
+        isCartOpen ? "lmt-shopping-list-with-cart" : "lmt-shopping-list"
+      }
+    >
       <Categories
         categories={categories}
         setActiveCategory={setActiveCategory}
@@ -50,22 +58,26 @@ function ShoppingList({ cart, updateCart }) {
       />
 
       <ul className="lmt-tracteur-list">
-        {tracteurList.map(
-          ({ id, cover, name, fuel, chevaux, price, category }) =>
-            !activeCategory || activeCategory === category ? (
-              <div key={id}>
-                <TracteurItem
-                  id={id}
-                  cover={cover}
-                  name={name}
-                  fuel={fuel}
-                  chevaux={chevaux}
-                  price={price}
-                />
-                <button onClick={() => addToCart(name, price)}>Ajouter</button>
-              </div>
-            ) : null
-        )}
+        {Array.isArray(tracteurList)
+          ? tracteurList.map(
+              ({ id, cover, name, fuel, chevaux, price, category }) =>
+                !activeCategory || activeCategory === category ? (
+                  <div key={id}>
+                    <TracteurItem
+                      id={id}
+                      cover={cover}
+                      name={name}
+                      fuel={fuel}
+                      chevaux={chevaux}
+                      price={price}
+                    />
+                    <button onClick={() => addToCart(name, price, cover)}>
+                      Ajouter
+                    </button>
+                  </div>
+                ) : null,
+            )
+          : []}
       </ul>
     </div>
   );
