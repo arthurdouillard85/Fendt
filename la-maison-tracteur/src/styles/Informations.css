@@ -1,0 +1,36 @@
+.lmt-informations {
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    height: fit-content;
+    flex: 1;
+}
+
+.lmt-informations h2 {
+    text-align: center;
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+
+.lmt-informations .information {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px 0;
+}
+
+.lmt-informations .information label {
+    font-weight: bold;
+    color: #6c757d;
+}
+
+.lmt-informations .information p {
+    margin: 0;
+    color: #495057;
+}

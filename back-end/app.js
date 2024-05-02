@@ -332,7 +332,7 @@ const getUserProfile = (req, res) => {
 
     // Requête pour récupérer l'email de l'utilisateur depuis la base de données
     const selectQuery =
-      "SELECT email,role,telephone,adresse FROM utilisateur WHERE id = ?";
+      "SELECT nom,prenom,email,role,telephone,adresse FROM utilisateur WHERE id = ?";
     connection.query(selectQuery, [userId], (error, results) => {
       if (error) {
         console.error(
@@ -349,6 +349,8 @@ const getUserProfile = (req, res) => {
       }
 
       // Récupérer l'email de l'utilisateur à partir des résultats de la requête
+      const userNom = results[0].nom;
+      const userPrenom = results[0].prenom;
       const userEmail = results[0].email;
       const userRole = results[0].role;
       const userTelephone = results[0].telephone;
@@ -356,6 +358,8 @@ const getUserProfile = (req, res) => {
 
       // Renvoyer l'email de l'utilisateur en tant que réponse
       res.json({
+        nom: userNom,
+        prenom: userPrenom,
         email: userEmail,
         role: userRole,
         telephone: userTelephone,

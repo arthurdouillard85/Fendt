@@ -1,20 +1,17 @@
 .lmt-cart, .lmt-cart-profile {
   right: 0;
   width: 20%;
-  height: 87vh;
   padding: 20px;
   background-color: #eee;
   border-radius: 10px;
-  margin: 20px 15px 0 20px;
+  margin: 20px 20px 20px 20px;
   overflow: auto;
+  height: fit-content;
+  flex: 1;
 }
 
 .lmt-cart {
   position: fixed;
-}
-
-.lmt-cart-profile {
-  position: absolute;
 }
 
 .lmt-cart-profile {
@@ -45,7 +42,6 @@
 }
 
 .lmt-cart button, .lmt-cart-profile button {
-  position: absolute;
   bottom: 20px;
   color: white;
   border: none;
@@ -63,6 +59,10 @@
   background-color: #ff6347;
 }
 
-.lmt-cart-profile button {
-  background-color: #90EE90;
+.lmt-cart button.valider, .lmt-cart-profile button.valider{
+  background-color: #3f7f20;
+}
+
+.lmt-cart button:hover.valider, .lmt-cart-profile button.valider:hover{
+  background-color: #1d5f00;
 }

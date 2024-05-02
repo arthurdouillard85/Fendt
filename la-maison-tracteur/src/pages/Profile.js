@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import Cart from "../components/Cart";
 import { useLocation } from "react-router-dom";
 import "../styles/Profile.css";
+import Informations from "../components/Informations";
 
 function Profile() {
+  const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [userId, setUserId] = useState("");
@@ -12,6 +15,14 @@ function Profile() {
   const [adresse, setAdresse] = useState("");
   const [cart, updateCart] = useState(savedCart ? JSON.parse(savedCart) : []);
   const location = useLocation();
+  const client = {
+    nom: nom,
+    prenom: prenom,
+    email: email,
+    telephone: telephone,
+    adresse: adresse,
+    // autres informations...
+  };
 
   useEffect(() => {
     const userIdFromLocalStorage = localStorage.getItem("userId");
@@ -22,6 +33,8 @@ function Profile() {
       .then((response) => response.json())
       .then((data) => {
         if (data) {
+          setNom(data.nom);
+          setPrenom(data.prenom);
           setEmail(data.email);
           setTelephone(data.telephone);
           setAdresse(data.adresse);
@@ -175,82 +188,83 @@ function Profile() {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      <div className="profile-container">
-        <h2>Profil Utilisateur</h2>
-        <p className="email-label">Email : {email}</p>
-        <p className="email-label">Téléphone : {telephone}</p>
-        <p className="email-label">Adresse : {adresse}</p>
-        <div className="profile-details-container">
-          {/* Changer le mot de passe */}
-          <div className="password-change">
-            <h3>Changer le mot de passe</h3>
-            <input
-              className="password-input"
-              type="password"
-              placeholder="Ancien mot de passe"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-            />
-            <input
-              className="password-input"
-              type="password"
-              placeholder="Nouveau mot de passe"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <input
-              className="password-input"
-              type="password"
-              placeholder="Confirmer le nouveau mot de passe"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <button
-              className="password-change-btn"
-              onClick={handleChangePassword}
-            >
-              Changer le mot de passe
-            </button>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-          </div>
-          <div className="contact-change">
-            <div className="telephone-change">
-              <h3>Changer le numéro de téléphone</h3>
+    <div className="profile-page">
+      <Cart cart={cart} updateCart={updateCart} location={location} />
+      <div className="profile-header">
+        <Informations client={client} />
+        <div className="profile-container">
+          <h2>Profil Utilisateur</h2>
+          <div className="profile-details-container">
+            {/* Changer le mot de passe */}
+            <div className="password-change">
+              <h3>Changer le mot de passe</h3>
               <input
-                className="telephone-input"
-                type="text"
-                placeholder="Nouveau numéro de téléphone"
-                onChange={(e) => setNewTelephone(e.target.value)}
+                className="password-input"
+                type="password"
+                placeholder="Ancien mot de passe"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+              />
+              <input
+                className="password-input"
+                type="password"
+                placeholder="Nouveau mot de passe"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              <input
+                className="password-input"
+                type="password"
+                placeholder="Confirmer le nouveau mot de passe"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
               <button
-                className="telephone-change-btn"
-                onClick={handleChangeTelephone}
+                className="password-change-btn"
+                onClick={handleChangePassword}
               >
-                Changer le numéro de téléphone
+                Changer le mot de passe
               </button>
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
-            <div className="adresse-change">
-              <h3>Changer l'adresse</h3>
-              <input
-                className="adresse-input"
-                type="text"
-                placeholder="Nouvelle adresse"
-                onChange={(e) => setNewAdresse(e.target.value)}
-              />
-              <button
-                className="adresse-change-btn"
-                onClick={handleChangeAdresse}
-              >
-                Changer l'adresse
-              </button>
+            <div className="contact-change">
+              <div className="telephone-change">
+                <h3>Changer le numéro de téléphone</h3>
+                <input
+                  className="telephone-input"
+                  type="text"
+                  placeholder="Nouveau numéro de téléphone"
+                  onChange={(e) => setNewTelephone(e.target.value)}
+                />
+                <button
+                  className="telephone-change-btn"
+                  onClick={handleChangeTelephone}
+                >
+                  Changer le numéro de téléphone
+                </button>
+              </div>
+              <div className="adresse-change">
+                <h3>Changer l'adresse</h3>
+                <input
+                  className="adresse-input"
+                  type="text"
+                  placeholder="Nouvelle adresse"
+                  onChange={(e) => setNewAdresse(e.target.value)}
+                />
+                <button
+                  className="adresse-change-btn"
+                  onClick={handleChangeAdresse}
+                >
+                  Changer l'adresse
+                </button>
+              </div>
             </div>
           </div>
+          {/* Déconnexion */}
+          <button className="logout-btn" onClick={handleLogout}>
+            Déconnexion
+          </button>
         </div>
-        {/* Déconnexion */}
-        <button className="logout-btn" onClick={handleLogout}>
-          Déconnexion
-        </button>
       </div>
       {role === "utilisateur" && (
         <Cart cart={cart} updateCart={updateCart} location={location} />

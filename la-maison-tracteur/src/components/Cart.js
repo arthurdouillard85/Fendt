@@ -24,12 +24,24 @@ function Cart({ cart, updateCart, location }) {
                 {price}€ x {amount}
               </div>
             ))}
+
+            <h3>Total :{total}€</h3>
           </ul>
-          <h3>Total :{total}€</h3>
           {!isProfilePage ? (
-            <button onClick={() => updateCart([])}>Vider le panier</button>
+            <div>
+              <button onClick={() => updateCart([])}>Vider le panier</button>
+              <button
+                className="valider"
+                onClick={() => alert("Merci pour votre achat")}
+              >
+                Valider le panier
+              </button>
+            </div>
           ) : (
-            <button onClick={() => alert("Merci pour votre achat")}>
+            <button
+              className="valider"
+              onClick={() => alert("Merci pour votre achat")}
+            >
               Valider le panier
             </button>
           )}
