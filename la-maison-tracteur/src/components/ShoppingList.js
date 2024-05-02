@@ -28,7 +28,7 @@ function ShoppingList({ cart, updateCart }) {
       )
     : [];
 
-  function addToCart(name, price, cover) {
+  function addToCart(id, name, price, cover) {
     const currentTracteurAdded = cart.find(
       (tracteur) => tracteur.name === name,
     );
@@ -38,10 +38,10 @@ function ShoppingList({ cart, updateCart }) {
       );
       updateCart([
         ...cartFilteredCurrentTracteur,
-        { name, price, cover, amount: currentTracteurAdded.amount + 1 },
+        { id, name, price, cover, amount: currentTracteurAdded.amount + 1 },
       ]);
     } else {
-      updateCart([...cart, { name, price, cover, amount: 1 }]);
+      updateCart([...cart, { id, name, price, cover, amount: 1 }]);
     }
   }
 
@@ -71,7 +71,7 @@ function ShoppingList({ cart, updateCart }) {
                       chevaux={chevaux}
                       price={price}
                     />
-                    <button onClick={() => addToCart(name, price, cover)}>
+                    <button onClick={() => addToCart(id, name, price, cover)}>
                       Ajouter
                     </button>
                   </div>

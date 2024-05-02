@@ -116,7 +116,11 @@ function Detail() {
             alt={`${detailTracteur.name} cover`}
           />
           <h2 className="tracteur-price">
-            Prix : {detailTracteur.price} euros
+            Prix :{" "}
+            {detailTracteur.price
+              ? detailTracteur.price.toLocaleString("fr-FR")
+              : "Loading..."}{" "}
+            euros
           </h2>
           <h2 className="tracteur-fuel">Consomation : {detailTracteur.fuel}</h2>
           <h2 className="tracteur-chevaux">

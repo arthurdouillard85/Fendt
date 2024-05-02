@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import "../styles/Cart.css";
+import { Link } from "react-router-dom";
+import trash from "../assets/poubelle.png"; // Importez l'icône de poubelle
 
 function Cart({ cart, updateCart, location }) {
   const total = cart.reduce(
@@ -12,20 +14,61 @@ function Cart({ cart, updateCart, location }) {
     document.title = `LMT: ${total}€ d'achats`;
   }, [total]);
 
+  const handleQuantityChange = (id, event) => {
+    const newQuantity = event.target.value;
+
+    updateCart(
+      cart.map((item) =>
+        item.id === id ? { ...item, amount: Number(newQuantity) } : item,
+      ),
+    );
+  };
+
+  const handleRemoveItem = (id) => {
+    // Ajoutez une fonction pour supprimer l'élément du panier
+    updateCart(cart.filter((item) => item.id !== id));
+  };
+
   return (
     <div className={isProfilePage ? "lmt-cart-profile" : "lmt-cart"}>
       <h2>Panier</h2>
       {cart.length > 0 ? (
         <div>
           <ul>
-            {cart.map(({ name, price, amount, cover }, index) => (
+            {cart.map(({ id, name, price, amount, cover }, index) => (
               <div key={`${name}-${index}`}>
-                <img src={cover} alt={name} /> {/* Ajout de l'image */}
-                {price}€ x {amount}
+                <div className="info-produit">
+                  <div className="option-produit">
+                    <img src={cover} alt={name} />
+                    <p>{price.toLocaleString("fr-FR")} € &nbsp;&nbsp;&nbsp;</p>
+                    <Link to={`/detail/${id}`}>
+                      <a
+                        style={{
+                          textDecoration: "underline",
+                        }}
+                      >
+                        Option
+                      </a>
+                    </Link>
+                  </div>
+                  <div>
+                    <input
+                      type="number"
+                      min="1"
+                      value={amount}
+                      onChange={(event) => handleQuantityChange(id, event)}
+                    />
+                    <img
+                      src={trash}
+                      alt={"Supprimer"}
+                      className="trash-logo"
+                      onClick={() => handleRemoveItem(id)}
+                    />{" "}
+                  </div>
+                </div>
               </div>
             ))}
-
-            <h3>Total :{total}€</h3>
+            <h3>Total :{total.toLocaleString("fr-FR")}€</h3>
           </ul>
           {!isProfilePage ? (
             <div>

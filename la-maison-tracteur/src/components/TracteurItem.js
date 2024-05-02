@@ -9,7 +9,9 @@ function TracteurItem({ id, cover, name, fuel, chevaux, price }) {
   const idValue = id;
   return (
     <li className="lmt-tracteur-item" onClick={() => handleClick(name)}>
-      <span className="lmt-tracteur-item-price">{price}€</span>
+      <span className="lmt-tracteur-item-price">
+        {price.toLocaleString("fr-FR")}€
+      </span>
       <a href={`/detail/${idValue}`}>
         <img
           className="lmt-tracteur-item-cover"

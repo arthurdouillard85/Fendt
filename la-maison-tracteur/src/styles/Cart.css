@@ -7,6 +7,7 @@
   margin: 20px 20px 20px 20px;
   overflow: auto;
   height: fit-content;
+  max-height: 87vh;
   flex: 1;
 }
 
@@ -65,4 +66,18 @@
 
 .lmt-cart button:hover.valider, .lmt-cart-profile button.valider:hover{
   background-color: #1d5f00;
+}
+
+.lmt-cart .info-produit, .lmt-cart-profile .info-produit {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.lmt-cart .trash-logo, .lmt-cart-profile .trash-logo{
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  margin-left: auto;
 }
