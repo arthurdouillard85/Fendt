@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/Detail.css";
+import Option from "../components/Option";
 
 function Detail() {
   const { idArticle } = useParams();
   const [detailTracteur, setData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [image, setImage] = useState(null);
-  const [userId, setUserId] = useState("");
   const [role, setRole] = useState("");
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
@@ -40,11 +40,10 @@ function Detail() {
   };
 
   useEffect(() => {
-    const userIdFromLocalStorage = localStorage.getItem("userId");
-    setUserId(userIdFromLocalStorage);
+    const userId = localStorage.getItem("userId");
 
     // Requête pour récupérer le role de l'utilisateur à partir de l'ID de l'utilisateur
-    fetch(`http://localhost:3001/profile/${userIdFromLocalStorage}`)
+    fetch(`http://localhost:3001/profile/${userId}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.role) {
@@ -72,13 +71,6 @@ function Detail() {
           error,
         );
       });
-    //console.log(detailTracteur);
-    const token = localStorage.getItem("token");
-    if (token) {
-      // Si un token est présent, récupérer le userId connecté
-      const userId = localStorage.getItem("userId");
-      setUserId(userId);
-    }
   }, [idArticle]);
 
   const handleInputChange = (e) => {
@@ -107,34 +99,23 @@ function Detail() {
 
   return (
     <div className="modale-container">
+      <Option id={idArticle} image={detailTracteur.cover} />
+      <div style={{ alignSelf: "flex-start" }}>
+        <h1>{detailTracteur.name}</h1>
+      </div>
       {!isEditing ? (
-        <div className="tracteur-details">
-          <h1 className="tracteur-name">{detailTracteur.name}</h1>
+        <>
           <img
             className="tracteur-cover"
             src={detailTracteur.cover}
             alt={`${detailTracteur.name} cover`}
           />
-          <h2 className="tracteur-price">
-            Prix :{" "}
-            {detailTracteur.price
-              ? detailTracteur.price.toLocaleString("fr-FR")
-              : "Loading..."}{" "}
-            euros
-          </h2>
-          <h2 className="tracteur-fuel">Consomation : {detailTracteur.fuel}</h2>
-          <h2 className="tracteur-chevaux">
-            Chevaux : {detailTracteur.chevaux}
-          </h2>
-          <h2 className="tracteur-category">
-            Category : {detailTracteur.category}
-          </h2>
           {role === "admin" && (
             <button className="edit-button" onClick={() => setIsEditing(true)}>
               Modifier
             </button>
           )}
-        </div>
+        </>
       ) : (
         <div className="edit-mode">
           <label className="name-label">Nom:</label>

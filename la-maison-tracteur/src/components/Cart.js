@@ -1,32 +1,103 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "../styles/Cart.css";
 import { Link } from "react-router-dom";
 import trash from "../assets/poubelle.png"; // Importez l'icône de poubelle
 
-function Cart({ cart, updateCart, location }) {
-  const total = cart.reduce(
-    (acc, tracteurType) => acc + tracteurType.amount * tracteurType.price,
+function Cart({ updateCart, location }) {
+  const [cart, setCart] = useState([]);
+
+  const total_achat = cart.reduce(
+    (acc, item) => acc + parseInt(item.price) * parseInt(item.amount),
     0,
   );
+
   const isProfilePage = location.pathname === "/profile";
 
   useEffect(() => {
-    document.title = `LMT: ${total}€ d'achats`;
-  }, [total]);
+    const userId = localStorage.getItem("userId");
+
+    // Envoyez une requête GET à votre API pour récupérer les données du panier
+    fetch(`http://localhost:3001/panier/${userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        // Mettez à jour l'état du panier avec les données récupérées
+        setCart(data);
+      })
+      .catch((error) =>
+        console.error("Erreur lors de la récupération du panier :", error),
+      );
+  }, []);
 
   const handleQuantityChange = (id, event) => {
     const newQuantity = event.target.value;
 
-    updateCart(
-      cart.map((item) =>
-        item.id === id ? { ...item, amount: Number(newQuantity) } : item,
-      ),
-    );
+    // Envoyez une requête PUT à votre API pour modifier la quantité de l'élément dans le panier
+    fetch(`http://localhost:3001/panier/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ amount: newQuantity }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Erreur lors de la modification de la quantité de l'élément dans le panier",
+          );
+        }
+        // Si la requête a réussi, mettez à jour la quantité de l'élément dans l'état local
+        updateCart(cart.filter((item) => item.id !== id));
+
+        const userId = localStorage.getItem("userId");
+        fetch(`http://localhost:3001/panier/${userId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            // Mettez à jour l'état du panier avec les données récupérées
+            setCart(data);
+          })
+          .catch((error) =>
+            console.error("Erreur lors de la récupération du panier :", error),
+          );
+      })
+      .catch((error) =>
+        console.error(
+          "Erreur lors de la modification de la quantité de l'élément dans le panier :",
+          error,
+        ),
+      );
   };
 
   const handleRemoveItem = (id) => {
-    // Ajoutez une fonction pour supprimer l'élément du panier
-    updateCart(cart.filter((item) => item.id !== id));
+    // Envoyez une requête DELETE à votre API pour supprimer l'élément du panier
+    fetch(`http://localhost:3001/panier/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Erreur lors de la suppression de l'élément du panier",
+          );
+        }
+        // Si la requête a réussi, supprimez l'élément du panier dans l'état local
+        updateCart(cart.filter((item) => item.id !== id));
+
+        const userId = localStorage.getItem("userId");
+        fetch(`http://localhost:3001/panier/${userId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            // Mettez à jour l'état du panier avec les données récupérées
+            setCart(data);
+          })
+          .catch((error) =>
+            console.error("Erreur lors de la récupération du panier :", error),
+          );
+      })
+      .catch((error) =>
+        console.error(
+          "Erreur lors de la suppression de l'élément du panier :",
+          error,
+        ),
+      );
   };
 
   return (
@@ -35,44 +106,63 @@ function Cart({ cart, updateCart, location }) {
       {cart.length > 0 ? (
         <div>
           <ul>
-            {cart.map(({ id, name, price, amount, cover }, index) => (
-              <div key={`${name}-${index}`}>
-                <div className="info-produit">
-                  <div className="option-produit">
-                    <img src={cover} alt={name} />
-                    <p>{price.toLocaleString("fr-FR")} € &nbsp;&nbsp;&nbsp;</p>
-                    <Link to={`/detail/${id}`}>
-                      <a
-                        style={{
-                          textDecoration: "underline",
-                        }}
-                      >
-                        Option
-                      </a>
-                    </Link>
-                  </div>
-                  <div>
-                    <input
-                      type="number"
-                      min="1"
-                      value={amount}
-                      onChange={(event) => handleQuantityChange(id, event)}
-                    />
-                    <img
-                      src={trash}
-                      alt={"Supprimer"}
-                      className="trash-logo"
-                      onClick={() => handleRemoveItem(id)}
-                    />{" "}
+            {cart.map(
+              (
+                {
+                  id,
+                  id_produit,
+                  name,
+                  option_ligne,
+                  couleur,
+                  price,
+                  amount,
+                  cover,
+                },
+                index,
+              ) => (
+                <div key={`${name}-${index}`}>
+                  <div className="info-produit">
+                    <div className="option-produit">
+                      <img src={cover} alt={name} />
+                      <p>
+                        {parseInt(price).toLocaleString("fr-FR")} €
+                        &nbsp;&nbsp;&nbsp;
+                      </p>
+                      <Link to={`/detail/${id_produit}`}>
+                        <a
+                          style={{
+                            textDecoration: "underline",
+                          }}
+                        >
+                          Option
+                        </a>
+                      </Link>
+                    </div>
+                    <p>
+                      {name} {option_ligne} {couleur}
+                    </p>
+                    <div>
+                      <input
+                        type="number"
+                        min="1"
+                        value={amount}
+                        onChange={(event) => handleQuantityChange(id, event)}
+                      />
+                      <img
+                        src={trash}
+                        alt={"Supprimer"}
+                        className="trash-logo"
+                        onClick={() => handleRemoveItem(id)}
+                      />{" "}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-            <h3>Total :{total.toLocaleString("fr-FR")}€</h3>
+              ),
+            )}
+            <h3>Total :{total_achat.toLocaleString("fr-FR")}€</h3>
           </ul>
           {!isProfilePage ? (
             <div>
-              <button onClick={() => updateCart([])}>Vider le panier</button>
               <button
                 className="valider"
                 onClick={() => alert("Merci pour votre achat")}
