@@ -4,7 +4,7 @@ import Categories from "./Categories";
 import TracteurItem from "./TracteurItem";
 import CartOpenContext from "../context/CartOpenContext";
 
-function ShoppingList({ cart, updateCart }) {
+function ShoppingList() {
   const [tracteurList, setTracteurList] = useState([]);
   const [activeCategory, setActiveCategory] = useState("");
   const { isCartOpen } = useContext(CartOpenContext);
@@ -27,23 +27,6 @@ function ShoppingList({ cart, updateCart }) {
         [],
       )
     : [];
-
-  function addToCart(id, name, price, cover) {
-    const currentTracteurAdded = cart.find(
-      (tracteur) => tracteur.name === name,
-    );
-    if (currentTracteurAdded) {
-      const cartFilteredCurrentTracteur = cart.filter(
-        (tracteur) => tracteur.name !== name,
-      );
-      updateCart([
-        ...cartFilteredCurrentTracteur,
-        { id, name, price, cover, amount: currentTracteurAdded.amount + 1 },
-      ]);
-    } else {
-      updateCart([...cart, { id, name, price, cover, amount: 1 }]);
-    }
-  }
 
   return (
     <div
@@ -71,9 +54,6 @@ function ShoppingList({ cart, updateCart }) {
                       chevaux={chevaux}
                       price={price}
                     />
-                    <button onClick={() => addToCart(id, name, price, cover)}>
-                      Ajouter
-                    </button>
                   </div>
                 ) : null,
             )

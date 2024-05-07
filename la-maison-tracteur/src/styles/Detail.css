@@ -1,46 +1,27 @@
-/* Styles généraux */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-.modale-container {
-    max-width: 900px;
+.detail-container {
     margin: 0 auto;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    width: 900px;
+    justify-content: center;
 }
 
-/* Styles pour les éléments spécifiques */
-.tracteur-details {
-    background-color: #f5f5f5;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-.tracteur-name {
+.detail-container h1 {
     color: #1d5f00;
     font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.tracteur-price,
-.tracteur-fuel,
-.tracteur-chevaux,
-.tracteur-category {
-    color: #333;
-    font-size: 18px;
-    margin-bottom: 5px;
 }
 
 .tracteur-cover {
-    max-width: 100%;
+    width: 100%;
     height: auto;
-    margin-bottom: 10px;
 }
 
-.edit-button {
+.edit-button,
+.cancel-button,
+.save-button {
     background-color: #1d5f00;
     color: #fff;
     border: none;
@@ -50,7 +31,9 @@ body {
     font-size: 16px;
 }
 
-.edit-button:hover {
+.edit-button:hover,
+.cancel-button:hover,
+.save-button:hover {
     background-color: #144500;
 }
 
@@ -80,29 +63,6 @@ body {
 }
 
 .save-button {
-    background-color: #1d5f00;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
     align-self: flex-end;
     margin-left: auto;
 }
-
-.cancel-button {
-    background-color: #1d5f00;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-.save-button:hover,
-.cancel-button:hover {
-    background-color: #144500;
-}
-

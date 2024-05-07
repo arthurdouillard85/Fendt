@@ -1,14 +1,10 @@
 import "../styles/TracteurItem.css";
 import CareScale from "./CareScale";
 
-function handleClick(tracteurName) {
-  alert(`Vous voulez acheter 1 ${tracteurName}?`);
-}
-
 function TracteurItem({ id, cover, name, fuel, chevaux, price }) {
   const idValue = id;
   return (
-    <li className="lmt-tracteur-item" onClick={() => handleClick(name)}>
+    <li className="lmt-tracteur-item">
       <span className="lmt-tracteur-item-price">
         {price.toLocaleString("fr-FR")}€
       </span>

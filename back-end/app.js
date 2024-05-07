@@ -40,7 +40,7 @@ connection.connect((err) => {
 });
 // Exemple de requête SELECT à partir de votre table vêtement
 app.get("/", (req, res, next) => {
-  connection.query("SELECT * FROM tracteur", (error, results) => {
+  connection.query("SELECT * FROM produit", (error, results) => {
     if (error) {
       console.error("Erreur lors de la requête SELECT :", error);
       res
@@ -66,11 +66,87 @@ app.get("/users", (req, res) => {
   });
 });
 
+app.get("/option", (req, res, next) => {
+  connection.query("SELECT * FROM option_ligne", (error, results) => {
+    if (error) {
+      console.error("Erreur lors de la requête SELECT :", error);
+      res
+        .status(500)
+        .json({ error: "Erreur serveur lors de la requête SELECT." });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+});
+
+app.post("/panier", (req, res) => {
+  const { tracteurId, userId, optionId, price, date, couleur } = req.body;
+
+  // Vérifiez d'abord si un tracteur avec les mêmes propriétés existe déjà dans le panier
+  const checkQuery =
+    "SELECT * FROM panier WHERE id_tracteur = ? AND id_option_ligne = ? AND id_utilisateur = ? AND couleur = ? AND payer = 0";
+  const checkValues = [tracteurId, optionId, userId, couleur];
+
+  connection.query(checkQuery, checkValues, (checkError, checkResults) => {
+    if (checkError) {
+      res.status(500).json({ error: checkError });
+    } else {
+      if (checkResults.length > 0) {
+        // Si un tracteur avec les mêmes propriétés existe déjà, augmentez simplement sa quantité
+        const existingItem = checkResults[0];
+        const updateQuery =
+          "UPDATE panier SET nombre = nombre + 1 WHERE id = ?";
+        const updateValues = [existingItem.id];
+
+        connection.query(
+          updateQuery,
+          updateValues,
+          (updateError, updateResults) => {
+            if (updateError) {
+              res.status(500).json({ error: updateError });
+            } else {
+              res.status(200).json({
+                message: "Quantité du tracteur existant augmentée avec succès",
+              });
+            }
+          },
+        );
+      } else {
+        // Si aucun tracteur avec les mêmes propriétés n'existe, ajoutez une nouvelle ligne au panier
+        const insertQuery =
+          "INSERT INTO panier (id_tracteur, id_option_ligne, id_utilisateur, prix, date, couleur, payer) VALUES (?, ?, ?, ?, ?, ?, 0)";
+        const insertValues = [
+          tracteurId,
+          optionId,
+          userId,
+          price,
+          date,
+          couleur,
+        ];
+
+        connection.query(
+          insertQuery,
+          insertValues,
+          (insertError, insertResults) => {
+            if (insertError) {
+              res.status(500).json({ error: insertError });
+            } else {
+              res
+                .status(200)
+                .json({ message: "Tracteur ajouté au panier avec succès" });
+            }
+          },
+        );
+      }
+    }
+  });
+});
+
 //je récupère un seul tracteur en fonction de son id
 app.get("/:id", (req, res, next) => {
   const tracteurId = req.params.id;
   connection.query(
-    "SELECT * FROM tracteur WHERE id = ?",
+    "SELECT * FROM produit WHERE id = ?",
     [tracteurId],
     (error, results) => {
       if (error) {
@@ -148,7 +224,7 @@ app.put("/:id", (req, res, next) => {
   const tracteurId = req.params.id;
   const updatedTracteurData = req.body;
   connection.query(
-    "UPDATE tracteur SET ? WHERE id = ?",
+    "UPDATE produit SET ? WHERE id = ?",
     [updatedTracteurData, tracteurId],
     (error, results) => {
       if (error) {
@@ -158,7 +234,7 @@ app.put("/:id", (req, res, next) => {
           .json({ error: "Erreur serveur lors de la requête UPDATE." });
       } else {
         // Après la mise à jour, récupérez à nouveau les données mises à jour
-        const selectQuery = "SELECT * FROM tracteur WHERE id = ?";
+        const selectQuery = "SELECT * FROM produit WHERE id = ?";
         connection.query(
           selectQuery,
           [tracteurId],
@@ -194,7 +270,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
       const imageUrl = `http://localhost:3001/images/${req.file.filename}`;
       // Mise à jour du champ 'cover' dans MySQL avec la nouvelle URL de l'image
       const tracteurId = req.body.tracteurId; // Assurez-vous d'envoyer l'ID du vêtement avec la requête POST (côté Front)
-      const updateQuery = "UPDATE tracteur SET cover = ? WHERE id = ?";
+      const updateQuery = "UPDATE produit SET cover = ? WHERE id = ?";
       connection.query(
         updateQuery,
         [imageUrl, tracteurId],
@@ -499,6 +575,79 @@ app.post("/change-adresse", async (req, res) => {
       message: "Une erreur s'est produite lors du changement d'adresse.",
     });
   }
+});
+
+app.get("/tracteur/:id", (req, res) => {
+  const tracteurId = req.params.id;
+  connection.query(
+    "SELECT * FROM tracteur WHERE produit_id = ?",
+    [tracteurId],
+    (error, results) => {
+      if (error) {
+        console.error("Erreur lors de la récupération du tracteur :", error);
+        res.status(500).json({
+          error: "Erreur serveur lors de la récupération du tracteur.",
+        });
+      } else {
+        if (results.length > 0) {
+          res.status(200).json(results);
+        } else {
+          res.status(404).json({ error: "Tracteur non trouvé." });
+        }
+      }
+    },
+  );
+});
+
+app.get("/panier/:userId", (req, res) => {
+  const { userId } = req.params;
+
+  // Utilisez votre méthode préférée pour récupérer des données de votre base de données
+  // Par exemple, si vous utilisez MySQL avec le module mysql de Node.js, vous pouvez faire quelque chose comme ceci :
+  const query =
+    "select * from (SELECT p.id id, pr.id id_produit, t.nom name, ol.nom option_ligne,p.couleur,  p.prix price, p.nombre amount, pr.cover cover FROM panier p INNER JOIN tracteur t ON p.id_tracteur = t.id INNER JOIN produit pr ON t.produit_id = pr.id INNER JOIN option_ligne ol ON p.id_option_ligne = ol.id WHERE p.id_utilisateur = ? AND p.payer = 0) ptpo";
+  const values = [userId];
+
+  connection.query(query, values, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ error });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+});
+
+app.delete("/panier/:id", (req, res) => {
+  const { id } = req.params;
+
+  // Modifiez cette requête SQL pour supprimer une ligne de la table
+  const query = "DELETE FROM panier WHERE id = ?";
+  const values = [id];
+
+  connection.query(query, values, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ error });
+    } else {
+      res.status(200).json({ message: "Item supprimé avec succès" });
+    }
+  });
+});
+
+app.put("/panier/:id", (req, res) => {
+  const { id } = req.params;
+  const { amount } = req.body;
+
+  // Modifiez cette requête SQL pour mettre à jour la quantité de l'élément dans le panier
+  const query = "UPDATE panier SET nombre = ? WHERE id = ?";
+  const values = [amount, id];
+
+  connection.query(query, values, (error, results, fields) => {
+    if (error) {
+      res.status(500).json({ error });
+    } else {
+      res.status(200).json({ message: "Quantité modifiée avec succès" });
+    }
+  });
 });
 
 module.exports = app;

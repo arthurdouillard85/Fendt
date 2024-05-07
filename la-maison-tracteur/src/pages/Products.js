@@ -3,7 +3,6 @@ import Cart from "../components/Cart";
 import Footer from "../components/Footer";
 import ShoppingList from "../components/ShoppingList";
 import CartOpenContext from "../context/CartOpenContext";
-import { useLocation } from "react-router-dom";
 import "../styles/Layout.css";
 
 function Home() {
@@ -12,7 +11,6 @@ function Home() {
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState("");
   const { isCartOpen } = useContext(CartOpenContext);
-  const location = useLocation();
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
