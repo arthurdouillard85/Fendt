@@ -98,7 +98,7 @@ function Detail() {
   };
 
   return (
-    <div className="modale-container">
+    <div className="detail-container">
       <Option id={idArticle} image={detailTracteur.cover} />
       <div style={{ alignSelf: "flex-start" }}>
         <h1>{detailTracteur.name}</h1>
