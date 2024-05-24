@@ -189,7 +189,6 @@ function Profile() {
 
   return (
     <div className="profile-page">
-      <Cart cart={cart} updateCart={updateCart} location={location} />
       <div className="profile-header">
         <Informations client={client} />
         <div className="profile-container">

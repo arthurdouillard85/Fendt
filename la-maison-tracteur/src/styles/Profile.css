@@ -11,9 +11,9 @@
 }
 
 .profile-header {
+  margin-left: 20px;
   justify-content: space-between;
   align-items: center;
-
 }
 
 .profile-container h2 {
@@ -27,6 +27,7 @@
 
 .profile-details-container {
   display: flex;
+  width: 75vw;
   justify-content: space-between;
 }
 
@@ -90,6 +91,6 @@
   display: flex;
   justify-content: center;
   flex-direction: row;
-  height: 100vw;
-  width: 100vw
+  height: 100%;
+  width: 100%
 }
