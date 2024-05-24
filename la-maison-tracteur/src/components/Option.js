@@ -170,7 +170,7 @@ function Option({ id, image }) {
                   disabled={!selectedOption || !selectedColor}
                   className="add-to-cart-button"
                 >
-                  Ajouté au panier
+                  Ajouter au panier
                 </button>
               </form>
             </>

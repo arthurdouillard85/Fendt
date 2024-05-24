@@ -142,6 +142,29 @@ app.post("/panier", (req, res) => {
   });
 });
 
+app.put("/payer-panier", async (req, res) => {
+  // Récupérer les données du corps de la requête
+  const { userId } = req.body;
+
+  try {
+    // Requête pour mettre à jour l'adresse dans la base de données
+    const updateQuery = "UPDATE panier SET payer = 1 WHERE id_utilisateur = ?";
+    connection.query(updateQuery, [userId], (updateError, updateResults) => {
+      if (updateError) {
+        throw updateError;
+      }
+      console.log("Commande payer avec succès.");
+      res.json({ message: "Commande payer avec succès." });
+    });
+  } catch (error) {
+    // Gérer les erreurs
+    console.error("Une erreur s'est produite lors du paiement :", error);
+    res.status(500).json({
+      message: "Une erreur s'est produite lors du paiement",
+    });
+  }
+});
+
 //je récupère un seul tracteur en fonction de son id
 app.get("/:id", (req, res, next) => {
   const tracteurId = req.params.id;
@@ -375,6 +398,7 @@ app.post("/login", (req, res, next) => {
               } else {
                 if (match) {
                   const userId = results[0].id; // 'id' est la colonne contenant l'ID utilisateur
+                  const role = results[0].role; // 'id' est la colonne contenant l'ID utilisateur
 
                   // Générer un token JWT
                   const token = jwt.sign({ userId }, "votre_clé_secrète", {
@@ -385,6 +409,7 @@ app.post("/login", (req, res, next) => {
                     message: "Authentification réussie.",
                     userId: userId,
                     token: token,
+                    role: role,
                   });
                 } else {
                   res.status(401).json({ error: "Identifiants incorrects." });

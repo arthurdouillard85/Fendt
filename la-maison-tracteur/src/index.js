@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./components/Header";
 import Detail from "./pages/Detail";
@@ -8,8 +8,9 @@ import Logout from "./pages/Logout";
 import Profile from "./pages/Profile";
 import Questionnaire from "./pages/Questionnaire";
 import Utilisateurs from "./pages/Utilisateurs";
+import Commande from "./pages/Commande";
 import CartOpenContext from "./context/CartOpenContext";
-import { CartContext } from "./context/CartContext"; // Assurez-vous d'importer CartContext
+import { CartContext } from "./context/CartContext";
 
 import { Route, BrowserRouter as Router } from "react-router-dom";
 
@@ -32,8 +33,6 @@ function App() {
   return (
     <CartOpenContext.Provider value={{ isCartOpen, setIsCartOpen }}>
       <CartContext.Provider value={{ cart, addToCart }}>
-        {" "}
-        {/* Ajoutez cette ligne */}
         <React.StrictMode>
           <Router>
             <Header cart={cart} updateCart={updateCart} />
@@ -61,10 +60,12 @@ function App() {
             <Route path="/logout">
               <Logout />
             </Route>
+            <Route path="/commande">
+              <Commande />
+            </Route>
           </Router>
         </React.StrictMode>
       </CartContext.Provider>{" "}
-      {/* Ajoutez cette ligne */}
     </CartOpenContext.Provider>
   );
 }

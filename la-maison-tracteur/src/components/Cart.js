@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import "../styles/Cart.css";
-import { Link } from "react-router-dom";
-import trash from "../assets/poubelle.png"; // Importez l'icône de poubelle
+import { Link, useLocation } from "react-router-dom";
+import trash from "../assets/poubelle.png";
+import { useHistory } from "react-router-dom";
 
 function Cart({ updateCart, location }) {
   const [cart, setCart] = useState([]);
+  const currentLocation = useLocation;
 
   const total_achat = cart.reduce(
     (acc, item) => acc + parseInt(item.price) * parseInt(item.amount),
@@ -12,6 +14,12 @@ function Cart({ updateCart, location }) {
   );
 
   const isProfilePage = location.pathname === "/profile";
+  const history = useHistory();
+
+  const handleCheckout = () => {
+    alert("Vous allez être redirigé vers la page de commande");
+    history.push("/commande");
+  };
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -161,20 +169,8 @@ function Cart({ updateCart, location }) {
             )}
             <h3>Total :{total_achat.toLocaleString("fr-FR")}€</h3>
           </ul>
-          {!isProfilePage ? (
-            <div>
-              <button
-                className="valider"
-                onClick={() => alert("Merci pour votre achat")}
-              >
-                Valider le panier
-              </button>
-            </div>
-          ) : (
-            <button
-              className="valider"
-              onClick={() => alert("Merci pour votre achat")}
-            >
+          {currentLocation().pathname !== "/commande" && (
+            <button className="valider" onClick={handleCheckout}>
               Valider le panier
             </button>
           )}
