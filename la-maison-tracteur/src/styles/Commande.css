@@ -52,7 +52,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-button {
+.commande-page button {
     background-color: #3f7f20;
     color: #fff;
     padding: 10px 20px;
@@ -62,6 +62,6 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.commande-page button:hover {
     background-color: #1d5f00;
 }
