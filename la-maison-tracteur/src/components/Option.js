@@ -3,7 +3,7 @@ import "../styles/Option.css";
 import { CartContext } from "../context/CartContext";
 import { useHistory } from "react-router-dom";
 
-function Option({ id, image }) {
+function Option({ id, image, category }) {
   const [tracteurs, setTracteurs] = useState([]);
   const [selectedTracteur, setSelectedTracteur] = useState("");
   const [option, setOption] = useState([]); // Nouvel état pour suivre l'étape actuelle
@@ -26,7 +26,10 @@ function Option({ id, image }) {
     const totalPrice = selectedTracteurItem.prix + selectedOptionItem.prix;
 
     const cartItem = {
-      tracteurId: selectedTracteurItem.id,
+      tracteurId: category === "tracteur" ? selectedTracteurItem.id : null,
+      moissonneuseId:
+        category === "moissonneuse" ? selectedTracteurItem.id : null,
+      ensileuseId: category === "ensileuse" ? selectedTracteurItem.id : null,
       userId: parseInt(localStorage.getItem("userId")), // Remplacez ceci par l'ID de l'utilisateur actuel
       optionId: selectedOptionItem.id,
       price: totalPrice,
@@ -54,7 +57,15 @@ function Option({ id, image }) {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:3001/tracteur/${id}`)
+    let url = "";
+    if (category === "tracteur") {
+      url = `http://localhost:3001/tracteur/${id}`;
+    } else if (category === "ensileuse") {
+      url = `http://localhost:3001/ensileuse/${id}`;
+    } else if (category === "moissonneuse") {
+      url = `http://localhost:3001/moissonneuse/${id}`;
+    }
+    fetch(url)
       .then((response) => response.json())
       .then((data) => {
         setTracteurs(data);

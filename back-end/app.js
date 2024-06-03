@@ -80,12 +80,28 @@ app.get("/option", (req, res, next) => {
 });
 
 app.post("/panier", (req, res) => {
-  const { tracteurId, userId, optionId, price, date, couleur } = req.body;
+  const {
+    tracteurId,
+    moissonneuseId,
+    ensileuseId,
+    userId,
+    optionId,
+    price,
+    date,
+    couleur,
+  } = req.body;
 
   // Vérifiez d'abord si un tracteur avec les mêmes propriétés existe déjà dans le panier
   const checkQuery =
-    "SELECT * FROM panier WHERE id_tracteur = ? AND id_option_ligne = ? AND id_utilisateur = ? AND couleur = ? AND payer = 0";
-  const checkValues = [tracteurId, optionId, userId, couleur];
+    "SELECT * FROM panier WHERE id_tracteur = ? AND id_moissonneuse = ? AND id_ensileuse = ? AND id_option_ligne = ? AND id_utilisateur = ? AND couleur = ? AND payer = 0";
+  const checkValues = [
+    tracteurId,
+    moissonneuseId,
+    ensileuseId,
+    optionId,
+    userId,
+    couleur,
+  ];
 
   connection.query(checkQuery, checkValues, (checkError, checkResults) => {
     if (checkError) {
@@ -114,9 +130,11 @@ app.post("/panier", (req, res) => {
       } else {
         // Si aucun tracteur avec les mêmes propriétés n'existe, ajoutez une nouvelle ligne au panier
         const insertQuery =
-          "INSERT INTO panier (id_tracteur, id_option_ligne, id_utilisateur, prix, date, couleur, payer) VALUES (?, ?, ?, ?, ?, ?, 0)";
+          "INSERT INTO panier (id_tracteur, id_moissonneuse, id_ensileuse,  id_option_ligne, id_utilisateur, prix, date, couleur, payer) VALUES (?,?,?, ?, ?, ?, ?, ?, 0)";
         const insertValues = [
           tracteurId,
+          moissonneuseId,
+          ensileuseId,
           optionId,
           userId,
           price,
@@ -665,14 +683,89 @@ app.get("/tracteur/:id", (req, res) => {
   );
 });
 
+app.get("/moissonneuse/:id", (req, res) => {
+  const moissonneuseId = req.params.id;
+  connection.query(
+    "SELECT * FROM moissonneuse WHERE produit_id = ?",
+    [moissonneuseId],
+    (error, results) => {
+      if (error) {
+        console.error(
+          "Erreur lors de la récupération du moissonneuse :",
+          error,
+        );
+        res.status(500).json({
+          error: "Erreur serveur lors de la récupération du moissonneuse.",
+        });
+      } else {
+        if (results.length > 0) {
+          res.status(200).json(results);
+        } else {
+          res.status(404).json({ error: "Moissonneuse non trouvé." });
+        }
+      }
+    },
+  );
+});
+
+app.get("/ensileuse/:id", (req, res) => {
+  const ensileuseId = req.params.id;
+  connection.query(
+    "SELECT * FROM ensileuse WHERE produit_id = ?",
+    [ensileuseId],
+    (error, results) => {
+      if (error) {
+        console.error("Erreur lors de la récupération du ensileuse :", error);
+        res.status(500).json({
+          error: "Erreur serveur lors de la récupération du ensileuse.",
+        });
+      } else {
+        if (results.length > 0) {
+          res.status(200).json(results);
+        } else {
+          res.status(404).json({ error: "Ensileuse non trouvé." });
+        }
+      }
+    },
+  );
+});
+
 app.get("/panier/:userId", (req, res) => {
   const { userId } = req.params;
 
-  // Utilisez votre méthode préférée pour récupérer des données de votre base de données
-  // Par exemple, si vous utilisez MySQL avec le module mysql de Node.js, vous pouvez faire quelque chose comme ceci :
-  const query =
-    "select * from (SELECT p.id id, pr.id id_produit, t.nom name, ol.nom option_ligne,p.couleur,  p.prix price, p.nombre amount, pr.cover cover FROM panier p INNER JOIN tracteur t ON p.id_tracteur = t.id INNER JOIN produit pr ON t.produit_id = pr.id INNER JOIN option_ligne ol ON p.id_option_ligne = ol.id WHERE p.id_utilisateur = ? AND p.payer = 0) ptpo";
-  const values = [userId];
+  const query = `
+    SELECT * FROM (
+        SELECT p.id AS id, pr.id AS id_produit, t.nom AS name, ol.nom AS option_ligne, 
+               p.couleur, p.prix AS price, p.nombre AS amount, pr.cover 
+        FROM panier p
+        INNER JOIN tracteur t ON p.id_tracteur = t.id
+        INNER JOIN produit pr ON t.produit_id = pr.id
+        INNER JOIN option_ligne ol ON p.id_option_ligne = ol.id
+        WHERE p.id_utilisateur = ? AND p.payer = 0
+        
+        UNION ALL
+        
+        SELECT p.id AS id, pr.id AS id_produit, e.nom AS name, ol.nom AS option_ligne, 
+               p.couleur, p.prix AS price, p.nombre AS amount, pr.cover 
+        FROM panier p
+        INNER JOIN ensileuse e ON p.id_ensileuse = e.id
+        INNER JOIN produit pr ON e.produit_id = pr.id
+        INNER JOIN option_ligne ol ON p.id_option_ligne = ol.id
+        WHERE p.id_utilisateur = ? AND p.payer = 0
+        
+        UNION ALL
+        
+        SELECT p.id AS id, pr.id AS id_produit, m.nom AS name, ol.nom AS option_ligne, 
+               p.couleur, p.prix AS price, p.nombre AS amount, pr.cover 
+        FROM panier p
+        INNER JOIN moissonneuse m ON p.id_moissonneuse = m.id
+        INNER JOIN produit pr ON m.produit_id = pr.id
+        INNER JOIN option_ligne ol ON p.id_option_ligne = ol.id
+        WHERE p.id_utilisateur = ? AND p.payer = 0
+    ) AS ptpo;
+`;
+
+  const values = [userId, userId, userId]; // userId needs to be repeated for each subquery
 
   connection.query(query, values, (error, results, fields) => {
     if (error) {

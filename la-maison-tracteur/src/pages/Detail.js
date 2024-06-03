@@ -100,7 +100,11 @@ function Detail() {
   return (
     <div className="detail-container">
       {role === "utilisateur" && (
-        <Option id={idArticle} image={detailTracteur.cover} />
+        <Option
+          id={idArticle}
+          image={detailTracteur.cover}
+          category={detailTracteur.category}
+        />
       )}
       <div style={{ alignSelf: "flex-start" }}>
         <h1>{detailTracteur.name}</h1>
