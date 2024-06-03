@@ -425,6 +425,47 @@ app.post("/login", (req, res, next) => {
   );
 });
 
+//on ajoute un seul tracteur
+app.post("/ajout", (req, res, next) => {
+  const { name, fuel, chevaux, cover, price, category, bestSale } = req.body;
+  connection.query(
+    "INSERT INTO produit (name, fuel, chevaux, cover,  price, category, bestSale) VALUES (?, ?, ?, ?, ?, ?,?)",
+    [name, fuel, chevaux, cover, price, category, bestSale],
+    (error, results) => {
+      if (error) {
+        console.error("Erreur lors de la requête INSERT :", error);
+        res
+          .status(500)
+          .json({ error: "Erreur serveur lors de la requête INSERT." });
+      } else {
+        // Après l'ajout, récupérez à nouveau les données ajoutées
+        const selectQuery = "SELECT * FROM produit WHERE id = ?";
+        connection.query(
+          selectQuery,
+          [results.insertId],
+          (selectError, selectResults) => {
+            if (selectError) {
+              console.error(
+                "Erreur lors récupération données ajoutées :",
+                selectError,
+              );
+              res.status(500).json({
+                error: "Erreur serveur récupération données ajoutées.",
+              });
+            } else {
+              if (selectResults.length > 0) {
+                res.status(201).json(selectResults[0]); // Renvoyez données ajoutées en réponse
+              } else {
+                res.status(404).json({ error: "L'objet n'existe pas." });
+              }
+            }
+          },
+        );
+      }
+    },
+  );
+});
+
 // Fonction de route pour récupérer le profil de l'utilisateur
 const getUserProfile = (req, res) => {
   try {

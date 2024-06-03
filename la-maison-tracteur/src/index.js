@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import Questionnaire from "./pages/Questionnaire";
 import Utilisateurs from "./pages/Utilisateurs";
 import Commande from "./pages/Commande";
+import Ajout from "./pages/Ajout";
 import CartOpenContext from "./context/CartOpenContext";
 import { CartContext } from "./context/CartContext";
 
@@ -62,6 +63,9 @@ function App() {
             </Route>
             <Route path="/commande">
               <Commande />
+            </Route>
+            <Route path="/ajout">
+              <Ajout />
             </Route>
           </Router>
         </React.StrictMode>
