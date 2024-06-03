@@ -20,68 +20,14 @@ function Home() {
       <div className="additional-info">
         <h1>Informations supplémentaires</h1>
         <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        <h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        <h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        <h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        <h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        <h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        <h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        <h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        <h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        <h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        v v<h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        <h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
-        </p>
-        <h1>Informations supplémentaires</h1>
-        <p>
-          Ceci est un exemple de texte supplémentaire qui peut être ajouté sous
-          la vidéo.
+          Fendt GmbH est une entreprise allemande de construction de machines
+          agricoles fondée en Bavière en 1930. Spécialisée à l'origine dans des
+          modèles de faible puissance, elle produit aujourd'hui des tracteurs et
+          des ensileuses automotrices, et commercialise aussi des
+          moissonneuses-batteuses et des presses à balles à chambre variable
+          depuis son intégration au groupe AGCO Corporation en 1997. Depuis
+          2016, la marque commercialise également du matériel de fenaison Fella
+          sous les couleurs Fendt.
         </p>
       </div>
     </div>
