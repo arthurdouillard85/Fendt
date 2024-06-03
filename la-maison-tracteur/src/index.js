@@ -10,6 +10,7 @@ import Questionnaire from "./pages/Questionnaire";
 import Utilisateurs from "./pages/Utilisateurs";
 import Commande from "./pages/Commande";
 import Ajout from "./pages/Ajout";
+import AjouterConfiguration from "./pages/AjouterConfiguration";
 import CartOpenContext from "./context/CartOpenContext";
 import { CartContext } from "./context/CartContext";
 
@@ -66,6 +67,9 @@ function App() {
             </Route>
             <Route path="/ajout">
               <Ajout />
+            </Route>
+            <Route path="/ajouter-configuration/:idArticle">
+              <AjouterConfiguration />
             </Route>
           </Router>
         </React.StrictMode>

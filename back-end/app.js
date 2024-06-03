@@ -484,6 +484,60 @@ app.post("/ajout", (req, res, next) => {
   );
 });
 
+app.post("/ajouter-configuration-tracteur", (req, res) => {
+  const { produitId, name, price, chevaux, Nm } = req.body;
+  connection.query(
+    "INSERT INTO tracteur (produit_id, nom, prix, chevaux, Nm) VALUES (?, ?, ?, ?, ?)",
+    [produitId, name, price, chevaux, Nm],
+    (error, results) => {
+      if (error) {
+        console.error("Erreur lors de l'ajout de la configuration :", error);
+        res.status(500).json({
+          error: "Erreur serveur lors de l'ajout de la configuration.",
+        });
+      } else {
+        res.status(201).json({ message: "Configuration ajoutée avec succès." });
+      }
+    },
+  );
+});
+
+app.post("/ajouter-configuration-ensileuse", (req, res) => {
+  const { produitId, name, price, chevaux, Nm } = req.body;
+  connection.query(
+    "INSERT INTO ensileuse (produit_id, nom, prix, chevaux, Nm) VALUES (?, ?, ?, ?, ?)",
+    [produitId, name, price, chevaux, Nm],
+    (error, results) => {
+      if (error) {
+        console.error("Erreur lors de l'ajout de la configuration :", error);
+        res.status(500).json({
+          error: "Erreur serveur lors de l'ajout de la configuration.",
+        });
+      } else {
+        res.status(201).json({ message: "Configuration ajoutée avec succès." });
+      }
+    },
+  );
+});
+
+app.post("/ajouter-configuration-moissonneuse", (req, res) => {
+  const { produitId, name, price, chevaux, Nm } = req.body;
+  connection.query(
+    "INSERT INTO moissonneuse (produit_id, nom, prix, chevaux, Nm) VALUES (?, ?, ?, ?, ?)",
+    [produitId, name, price, chevaux, Nm],
+    (error, results) => {
+      if (error) {
+        console.error("Erreur lors de l'ajout de la configuration :", error);
+        res.status(500).json({
+          error: "Erreur serveur lors de l'ajout de la configuration.",
+        });
+      } else {
+        res.status(201).json({ message: "Configuration ajoutée avec succès." });
+      }
+    },
+  );
+});
+
 // Fonction de route pour récupérer le profil de l'utilisateur
 const getUserProfile = (req, res) => {
   try {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import "../styles/Detail.css";
 import Option from "../components/Option";
 
@@ -117,9 +117,23 @@ function Detail() {
             alt={`${detailTracteur.name} cover`}
           />
           {role === "admin" && (
-            <button className="edit-button" onClick={() => setIsEditing(true)}>
-              Modifier
-            </button>
+            <>
+              <button
+                className="edit-button"
+                onClick={() =>
+                  (window.location.href = `/ajouter-configuration/${idArticle}`)
+                }
+              >
+                Ajouter un configuration
+              </button>
+              <br />
+              <button
+                className="edit-button"
+                onClick={() => setIsEditing(true)}
+              >
+                Modifier
+              </button>
+            </>
           )}
         </>
       ) : (
